@@ -1,0 +1,482 @@
+{% load static %}
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Admin Dashboard | AgriConnect</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="{% static 'pages/admin-dashboard.css' %}" rel="stylesheet"/></head>
+<body>
+<aside class="sidebar" id="sidebar">
+<div class="sb-logo">
+<div class="circle"><img alt="AgriConnect Logo" src="{% static 'pages/images/Coffee.jpg' %}"/></div>
+<div>
+<div class="lt">AgriConnect</div>
+<div class="ls">ADMIN PANEL</div>
+</div>
+</div>
+<div class="sb-lbl">Main</div>
+<a class="nav-link active" data-sec="dashboard" href="#dashboard"><span class="ni"></span>Dashboard</a>
+<a class="nav-link" data-sec="farmers" href="#farmers"><span class="ni"></span>Farmers</a>
+<a class="nav-link" data-sec="buyers" href="#buyers"><span class="ni"></span>Buyers</a>
+<a class="nav-link" data-sec="products" href="#products"><span class="ni"></span>Products</a>
+<a class="nav-link" data-sec="orders" href="#orders"><span class="ni"></span>Orders</a>
+<div class="sb-lbl">Analytics</div>
+<a class="nav-link" data-sec="reports" href="#reports"><span class="ni"></span>Reports</a>
+<div class="sb-lbl">Account</div>
+<a class="nav-link" data-sec="myprofile" href="#myprofile"><span class="ni"></span>My Profile</a>
+<div class="sb-foot">
+<button class="logout-btn" id="logoutBtn"> Logout</button>
+</div>
+</aside>
+<div class="main">
+<div class="topbar">
+<div class="inline-style-admin_dashboard-37">
+<button class="menu-btn" id="menuBtn">☰</button>
+<div class="tb-l">
+<h1 id="pageTitle">Dashboard Overview</h1>
+<p id="pageSub">Management panel</p>
+</div>
+</div>
+<div class="tb-r">
+<div class="admin-chip">
+<div class="av" id="adminAv">A</div>
+<span class="an" id="adminName">Admin</span>
+</div>
+</div>
+</div>
+<div class="content">
+<div class="stats-row">
+<div class="stat-card"><span class="si"></span>
+<div>
+<div class="sl">Farmers</div>
+<div class="sv" id="sF">0</div>
+</div>
+</div>
+<div class="stat-card"><span class="si"></span>
+<div>
+<div class="sl">Buyers</div>
+<div class="sv" id="sB">0</div>
+</div>
+</div>
+<div class="stat-card"><span class="si"></span>
+<div>
+<div class="sl">Products</div>
+<div class="sv" id="sP">0</div>
+</div>
+</div>
+<div class="stat-card"><span class="si"></span>
+<div>
+<div class="sl">Orders</div>
+<div class="sv" id="sO">0</div>
+</div>
+</div>
+</div>
+<div class="sec" id="farmers">
+<div class="sec-top">
+<div>
+<h2> Manage Farmers</h2>
+<p>Approve or suspend farmer accounts</p>
+</div>
+<input class="sbox" id="fSearch" placeholder="Search farmers…" type="search"/>
+</div>
+<div class="tw">
+<table>
+<thead>
+<tr>
+<th>Photo</th>
+<th>Name</th>
+<th>Username</th>
+<th>District</th>
+<th>Phone</th>
+<th>Status</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody id="fBody"></tbody>
+</table>
+</div>
+</div>
+<div class="sec" id="buyers">
+<div class="sec-top">
+<div>
+<h2> Manage Buyers</h2>
+<p>Registered buyers on the platform</p>
+</div>
+<input class="sbox" id="bSearch" placeholder="Search buyers…" type="search"/>
+</div>
+<div class="tw">
+<table>
+<thead>
+<tr>
+<th>Photo</th>
+<th>Name</th>
+<th>Username</th>
+<th>District</th>
+<th>Phone</th>
+<th>Status</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody id="bBody"></tbody>
+</table>
+</div>
+</div>
+<div class="sec" id="products">
+<div class="sec-top">
+<div>
+<h2> Manage Products</h2>
+<p>Review agricultural listings</p>
+</div>
+<input class="sbox" id="pSearch" placeholder="Search products…" type="search"/>
+</div>
+<div class="tw">
+<table>
+<thead>
+<tr>
+<th>Photo</th>
+<th>Product</th>
+<th>Farmer</th>
+<th>Price (UGX)</th>
+<th>District</th>
+<th>Status</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody id="pBody"></tbody>
+</table>
+</div>
+</div>
+<div class="sec" id="orders">
+<h2> Orders</h2>
+<p>Marketplace transactions</p>
+<div class="tw">
+<table>
+<thead>
+<tr>
+<th>Order ID</th>
+<th>Buyer</th>
+<th>Product</th>
+<th>Amount (UGX)</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody id="oBody"></tbody>
+</table>
+</div>
+</div>
+<div class="sec" id="reports">
+<h2> Reports</h2>
+<p>Platform data summary</p>
+<div class="rg">
+<div class="ri">
+<h3>Total Farmers</h3>
+<div class="rv" id="rF">0</div>
+</div>
+<div class="ri">
+<h3>Total Buyers</h3>
+<div class="rv" id="rB">0</div>
+</div>
+<div class="ri">
+<h3>Total Products</h3>
+<div class="rv" id="rP">0</div>
+</div>
+<div class="ri">
+<h3>Pending Products</h3>
+<div class="rv" id="rPn">0</div>
+</div>
+</div>
+</div>
+<!-- ── My Profile ── -->
+<div class="sec" id="myprofile">
+<h2> My Profile &amp; Credentials</h2>
+<p>Update your admin username, name, contact info, and password anytime.</p>
+<form id="profileForm" novalidate="">
+<div class="profile-grid">
+<!-- Alert -->
+<div class="pf-alert" id="pfAlert"></div>
+<!-- Basic Info -->
+<div class="pf-divider-label">Basic Information</div>
+<div class="pf">
+<label for="pfFullName">Full Name</label>
+<input id="pfFullName" placeholder="Your full name" required="" type="text"/>
+</div>
+<div class="pf">
+<label for="pfUsername">Username</label>
+<input id="pfUsername" placeholder="Login username" required="" type="text"/>
+<span class="hint">This is what you use to sign in.</span>
+</div>
+<div class="pf">
+<label for="pfEmail">Email</label>
+<input id="pfEmail" placeholder="admin@example.com" type="email"/>
+</div>
+<div class="pf">
+<label for="pfPhone">Phone</label>
+<input id="pfPhone" placeholder="+256…" type="tel"/>
+</div>
+<!-- Divider -->
+<div class="pf-divider"></div>
+<div class="pf-divider-label">Change Password <span class="inline-style-admin_dashboard-173">(leave blank to keep
+                current)</span></div>
+<div class="pf">
+<label for="pfNewPw">New Password</label>
+<input autocomplete="new-password" id="pfNewPw" placeholder="Min. 6 characters" type="password"/>
+</div>
+<div class="pf">
+<label for="pfConfPw">Confirm New Password</label>
+<input autocomplete="new-password" id="pfConfPw" placeholder="Repeat new password" type="password"/>
+</div>
+<!-- Divider -->
+<div class="pf-divider"></div>
+<div class="pf-divider-label">Account Recovery <span class="inline-style-admin_dashboard-182">(used if you forget your
+                password)</span></div>
+<div class="pf inline-style-admin_dashboard-183">
+<label for="pfSecQ">Security Question</label>
+<select class="inline-style-admin_dashboard-185" id="pfSecQ">
+<option value="">— Choose a question —</option>
+<option>What is the name of your first pet?</option>
+<option>What is the name of the town you were born in?</option>
+<option>What was your childhood nickname?</option>
+<option>What is the name of your primary school?</option>
+<option>What is your mother's maiden name?</option>
+<option>What was the name of your first employer?</option>
+<option>What was the make of your first car or motorcycle?</option>
+<option>What is the name of your favourite teacher?</option>
+</select>
+</div>
+<div class="pf inline-style-admin_dashboard-195">
+<label for="pfSecA">Security Answer</label>
+<input autocomplete="off" id="pfSecA" placeholder="Your answer (case-insensitive)" type="text"/>
+<span class="hint">Leave blank to keep your current answer.</span>
+</div>
+</div>
+<button class="save-btn" id="saveProfileBtn" type="submit"> Save Changes</button>
+</form>
+</div>
+</div>
+</div>
+<div class="toast" id="toast"></div>
+{{ server_user|json_script:"agri-server-user" }}
+  <script src="{% static 'js/auth.js' %}"></script>
+<script>
+    const me = Auth.requireRole('admin', '/login/');
+    if (!me) throw 0;
+
+    // avatar
+    const avEl = document.getElementById('adminAv'), anEl = document.getElementById('adminName');
+    anEl.textContent = me.fullName || 'Admin';
+    if (me.profilePic) { avEl.innerHTML = `<img src="${me.profilePic}" alt="">`; }
+    else { avEl.textContent = (me.fullName || 'A')[0].toUpperCase(); }
+
+    // toast
+    function toast(m) { const t = document.getElementById('toast'); t.textContent = m; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2600); }
+
+    // mobile menu
+    document.getElementById('menuBtn').addEventListener('click', () => document.getElementById('sidebar').classList.toggle('open'));
+
+    // logout
+    document.getElementById('logoutBtn').addEventListener('click', async () => { if (confirm('Log out?')) { await Auth.logout(); location.href = '/login/'; } });
+
+    // nav
+    const TITLES = { dashboard: 'Dashboard Overview', farmers: 'Manage Farmers', buyers: 'Manage Buyers', products: 'Manage Products', orders: 'Orders', reports: 'Reports', myprofile: 'My Profile & Credentials' };
+    const SUBS = { dashboard: 'Management panel', farmers: 'Approve or manage farmer accounts', buyers: 'Registered buyers on the platform', products: 'Review agricultural listings', orders: 'Marketplace transactions', reports: 'Platform data summary', myprofile: 'Update your login credentials & personal info' };
+    document.querySelectorAll('.nav-link[data-sec]').forEach(l => {
+      l.addEventListener('click', () => {
+        document.querySelectorAll('.nav-link').forEach(x => x.classList.remove('active'));
+        l.classList.add('active');
+        const sec = l.dataset.sec;
+        document.getElementById('pageTitle').textContent = TITLES[sec] || 'Dashboard';
+        document.getElementById('pageSub').textContent = SUBS[sec] || 'Management panel';
+        document.getElementById('sidebar').classList.remove('open');
+        if (sec === 'myprofile') loadProfile();
+      });
+    });
+
+    // helpers
+    function badge(s) { const m = { active: 'ba', approved: 'ba', pending: 'bp', suspended: 'bs', rejected: 'br', processing: 'bp', completed: 'ba' }; return `<span class="badge ${m[(s || '').toLowerCase()] || 'bp'}">${s || 'Unknown'}</span>`; }
+    function av(u) { return u.profilePic ? `<img src="${u.profilePic}" class="uth" alt="">` : `<span class="uth">${(u.fullName || '?')[0].toUpperCase()}</span>`; }
+
+    // render
+    function renderF(q = '') {
+      const all = Auth.getUsersByRole('farmer'); document.getElementById('sF').textContent = all.length;
+      const us = all.filter(u => !q || JSON.stringify(u).toLowerCase().includes(q.toLowerCase()));
+      const body = document.getElementById('fBody');
+      if (!us.length) { body.innerHTML = `<tr><td colspan="7" class="js-inline-style-admin_dashboard-1">No farmers found.</td></tr>`; return; }
+      body.innerHTML = us.map(u => `<tr>
+    <td>${av(u)}</td><td><strong>${u.fullName}</strong><br><small class="js-inline-style-admin_dashboard-2">${u.email}</small></td>
+    <td>${u.username}</td><td>${u.district || '—'}</td><td>${u.phone || '—'}</td>
+    <td>${badge(u.status)}</td>
+    <td>${u.status !== 'active' ? `<button class="ab a-ap" onclick="setUs('${u.id}','active','f')"> Approve</button>` : ''}
+    ${u.status === 'active' ? `<button class="ab a-rj" onclick="setUs('${u.id}','suspended','f')"> Suspend</button>` : ''}
+    <button class="ab a-rj" onclick="delU('${u.id}','f')"></button></td></tr>`).join('');
+    }
+    function renderB(q = '') {
+      const all = Auth.getUsersByRole('buyer'); document.getElementById('sB').textContent = all.length;
+      const us = all.filter(u => !q || JSON.stringify(u).toLowerCase().includes(q.toLowerCase()));
+      const body = document.getElementById('bBody');
+      if (!us.length) { body.innerHTML = `<tr><td colspan="7" class="js-inline-style-admin_dashboard-3">No buyers found.</td></tr>`; return; }
+      body.innerHTML = us.map(u => `<tr>
+    <td>${av(u)}</td><td><strong>${u.fullName}</strong><br><small class="js-inline-style-admin_dashboard-4">${u.email}</small></td>
+    <td>${u.username}</td><td>${u.district || '—'}</td><td>${u.phone || '—'}</td>
+    <td>${badge(u.status)}</td>
+    <td>${u.status !== 'active' ? `<button class="ab a-ap" onclick="setUs('${u.id}','active','b')"> Approve</button>` : ''}
+    ${u.status === 'active' ? `<button class="ab a-rj" onclick="setUs('${u.id}','suspended','b')"> Suspend</button>` : ''}
+    <button class="ab a-rj" onclick="delU('${u.id}','b')"></button></td></tr>`).join('');
+    }
+    function renderP(q = '') {
+      const all = Auth.getProducts(); document.getElementById('sP').textContent = all.length;
+      const ps = all.filter(p => !q || JSON.stringify(p).toLowerCase().includes(q.toLowerCase()));
+      const body = document.getElementById('pBody');
+      if (!ps.length) { body.innerHTML = `<tr><td colspan="7" class="js-inline-style-admin_dashboard-5">No products found.</td></tr>`; return; }
+      body.innerHTML = ps.map(p => {
+        const f = Auth.getUserById(p.farmerId); const fn = f ? f.fullName : (p.farmerName || 'Unknown');
+        return `<tr>
+      <td>${p.image ? `<img src="${p.image}" class="uth js-inline-style-admin_dashboard-6" alt="">` : ''}</td>
+      <td><strong>${p.name}</strong><br><small class="js-inline-style-admin_dashboard-7">${p.category || ''}</small></td>
+      <td>${fn}</td><td>${Number(p.price || 0).toLocaleString()}</td><td>${p.district || '—'}</td>
+      <td>${badge(p.status)}</td>
+      <td>${p.status !== 'Approved' ? `<button class="ab a-ap" onclick="setProd('${p.id}','Approved')">Approve</button>` : '<span>Approved</span>'}
+      ${p.status !== 'Rejected' ? `<button class="ab a-rj" onclick="setProd('${p.id}','Rejected')">Reject</button>` : ''}
+      <button class="ab a-rj" onclick="delP('${p.id}')">Delete</button></td></tr>`;
+      }).join('');
+    }
+    function renderO() {
+      const os = Auth.getOrders(); document.getElementById('sO').textContent = os.length;
+      const body = document.getElementById('oBody');
+      if (!os.length) { body.innerHTML = `<tr><td colspan="5" class="js-inline-style-admin_dashboard-8">No orders yet.</td></tr>`; return; }
+      body.innerHTML = os.map(o => `<tr><td><code>${o.id || '—'}</code></td><td>${o.buyerName || '—'}</td><td>${o.productName || '—'}</td><td>${Number(o.amount || 0).toLocaleString()}</td><td>${badge(o.status)}</td></tr>`).join('');
+    }
+    function renderRep() {
+      const ps = Auth.getProducts();
+      document.getElementById('rF').textContent = Auth.getUsersByRole('farmer').length;
+      document.getElementById('rB').textContent = Auth.getUsersByRole('buyer').length;
+      document.getElementById('rP').textContent = ps.length;
+      document.getElementById('rPn').textContent = ps.filter(p => p.status === 'Pending').length;
+    }
+
+    // actions
+    async function setUs(id, st, role) {
+      const result = await Auth.updateUser(id, { status: st });
+      if (!result.ok) { toast(result.error); return; }
+      toast(`Status set to "${st}"`);
+      if (role === 'f') renderF(); else renderB();
+      renderRep();
+    }
+    async function delU(id, role) {
+      if (!confirm('Delete user permanently?')) return;
+      const result = await Auth.deleteUser(id);
+      if (!result.ok) { toast(result.error); return; }
+      toast('User deleted');
+      if (role === 'f') renderF(); else renderB();
+      renderRep();
+    }
+    async function setProd(id, st) {
+      const updated = await Auth.updateProduct(id, { status: st, reviewedAt: new Date().toISOString() });
+      if (!updated.ok) { toast(updated.error); return; }
+      toast(`Product ${st.toLowerCase()}`);
+      renderP();
+      renderRep();
+    }
+    async function delP(id) {
+      if (!confirm('Delete product?')) return;
+      const result = await Auth.deleteProduct(id);
+      if (!result.ok) { toast(result.error); return; }
+      toast('Product deleted'); renderP(); renderRep();
+    }
+
+    // search
+    document.getElementById('fSearch').addEventListener('input', e => renderF(e.target.value));
+    document.getElementById('bSearch').addEventListener('input', e => renderB(e.target.value));
+    document.getElementById('pSearch').addEventListener('input', e => renderP(e.target.value));
+
+    window.addEventListener('storage', () => { renderF(); renderB(); renderP(); renderO(); renderRep(); });
+  Auth.ready.then(() => { renderF(); renderB(); renderP(); renderO(); renderRep(); });
+
+    // ── My Profile ─────────────────────────────────────────────────────────────
+
+    function loadProfile() {
+      const u = Auth.getCurrentUser();
+      if (!u) return;
+      document.getElementById('pfFullName').value = u.fullName || '';
+      document.getElementById('pfUsername').value = u.username || '';
+      document.getElementById('pfEmail').value = u.email || '';
+      document.getElementById('pfPhone').value = u.phone || '';
+      document.getElementById('pfNewPw').value = '';
+      document.getElementById('pfConfPw').value = '';
+      // Security question
+      const sq = document.getElementById('pfSecQ');
+      if (u.securityQuestion) {
+        for (let i = 0; i < sq.options.length; i++) {
+          if (sq.options[i].text === u.securityQuestion) { sq.selectedIndex = i; break; }
+        }
+      } else { sq.selectedIndex = 0; }
+      document.getElementById('pfSecA').value = '';
+      hidePfAlert();
+    }
+
+    function showPfAlert(msg, type = 'err') {
+      const el = document.getElementById('pfAlert');
+      el.textContent = msg;
+      el.className = 'pf-alert ' + type + ' show';
+    }
+    function hidePfAlert() { document.getElementById('pfAlert').className = 'pf-alert'; }
+
+    document.getElementById('profileForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      hidePfAlert();
+
+      const fullName = document.getElementById('pfFullName').value.trim();
+      const username = document.getElementById('pfUsername').value.trim();
+      const email = document.getElementById('pfEmail').value.trim();
+      const phone = document.getElementById('pfPhone').value.trim();
+      const newPw = document.getElementById('pfNewPw').value;
+      const confPw = document.getElementById('pfConfPw').value;
+
+      const newSecQ = document.getElementById('pfSecQ').value;
+      const newSecA = document.getElementById('pfSecA').value.trim();
+
+      if (!fullName || !username) { showPfAlert('Full name and username are required.'); return; }
+      if (username.length < 4) { showPfAlert('Username must be at least 4 characters.'); return; }
+
+      // Check if username is taken by another user
+      const existing = Auth.getUserByUsername(username);
+      if (existing && existing.id !== me.id) { showPfAlert('That username is already taken by another account.'); return; }
+
+      const changes = { fullName, username, email, phone };
+
+      if (newPw) {
+        if (newPw.length < 6) { showPfAlert('New password must be at least 6 characters.'); return; }
+        if (newPw !== confPw) { showPfAlert('Passwords do not match.'); return; }
+        changes.password = newPw;
+      }
+
+      // Security question update
+      if (newSecQ && newSecA) {
+        if (newSecA.length < 2) { showPfAlert('Security answer must be at least 2 characters.'); return; }
+        changes.securityQuestion = newSecQ;
+        changes.securityAnswer = newSecA;
+      } else if (newSecQ && !newSecA && me.securityQuestion !== newSecQ) {
+        // Question changed but no new answer provided
+        showPfAlert('Please provide an answer for the new security question.'); return;
+      }
+
+      const btn = document.getElementById('saveProfileBtn');
+      btn.disabled = true;
+      btn.textContent = 'Saving…';
+
+      const saved = await Auth.updateUser(me.id, changes);
+      btn.disabled = false;
+      btn.textContent = ' Save Changes';
+      if (!saved.ok) { showPfAlert(saved.error); return; }
+      document.getElementById('adminName').textContent = fullName;
+      const avE = document.getElementById('adminAv');
+      if (!avE.querySelector('img')) avE.textContent = fullName[0].toUpperCase();
+      showPfAlert('Profile updated successfully!', 'ok');
+      toast('Profile saved!');
+    });
+  </script>
+</body>
+</html>

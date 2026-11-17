@@ -1,0 +1,425 @@
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f7f2;
+            color: #263328;
+        }
+
+        header {
+            background: #237a3b;
+            color: white;
+            padding: 18px 6%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 25px;
+        }
+
+        header a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        main {
+            max-width: 1100px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .welcome {
+            margin-bottom: 25px;
+        }
+
+        .welcome h2 {
+            color: #237a3b;
+            margin-bottom: 8px;
+        }
+
+        .summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .summary-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px #0000000d;
+        }
+
+        .summary-card h3 {
+            margin: 0 0 10px;
+            color: #59665a;
+            font-size: 15px;
+        }
+
+        .summary-card p {
+            margin: 0;
+            color: #237a3b;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .panel {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 8px #0000000d;
+        }
+
+        .panel h2 {
+            margin-top: 0;
+            color: #237a3b;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+
+        .field.full-width {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid #ccd5cc;
+            border-radius: 6px;
+            font: inherit;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 95px;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: 2px solid #a8d8b0;
+            border-color: #237a3b;
+        }
+
+        .help-text {
+            font-size: 13px;
+            color: #687568;
+            line-height: 1.5;
+        }
+
+        #imagePreview {
+            display: none;
+            width: 100%;
+            max-width: 300px;
+            max-height: 220px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+
+        button {
+            border: none;
+            border-radius: 6px;
+            padding: 11px 16px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .primary-button {
+            background: #237a3b;
+            color: white;
+        }
+
+        .primary-button:hover {
+            background: #185d2b;
+        }
+
+        .delete-button {
+            background: #c62828;
+            color: white;
+        }
+
+        .delete-button:hover {
+            background: #a51d1d;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 750px;
+        }
+
+        th,
+        td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e6eae6;
+        }
+
+        th {
+            background: #edf5ed;
+        }
+
+        .product-thumbnail {
+            width: 75px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 6px;
+            background: #edf1ed;
+        }
+
+        .no-photo {
+            width: 75px;
+            height: 60px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #edf1ed;
+            border-radius: 6px;
+            color: #667066;
+            font-size: 12px;
+            text-align: center;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 5px 9px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .status-pending {
+            background: #fff0c2;
+            color: #795600;
+        }
+
+        .status-approved {
+            background: #d9f3df;
+            color: #17632b;
+        }
+
+        .status-rejected {
+            background: #ffe0e0;
+            color: #9a1b1b;
+        }
+
+        #message {
+            display: none;
+            margin-bottom: 15px;
+            padding: 12px;
+            border-radius: 6px;
+        }
+
+        #message.success {
+            display: block;
+            background: #e1f5e5;
+            color: #17632b;
+        }
+
+        #message.error {
+            display: block;
+            background: #ffe5e5;
+            color: #9a1b1b;
+        }
+
+        footer {
+            text-align: center;
+            padding: 22px;
+            color: #637063;
+        }
+
+        @media (max-width: 650px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .field.full-width {
+                grid-column: auto;
+            }
+
+            .panel {
+                padding: 18px;
+            }
+
+            header h1 {
+                font-size: 21px;
+            }
+        }
+        
+        /* Shared AgriConnect header */
+        .site-header {
+            background: #237a3b;
+            color: white;
+            padding: 12px 6%;
+            min-height: 80px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: white;
+            text-decoration: none;
+        }
+
+        .brand-logo {
+            width: 50px;
+            height: 50px;
+            object-fit: contain;
+            display: block;
+        }
+
+        .brand-name {
+            font-size: 25px;
+            font-weight: bold;
+        }
+
+        .header-nav {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            flex-wrap: wrap;
+        }
+
+        .header-nav a {
+            color: white;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: bold;
+        }
+
+        .header-nav a:hover {
+            text-decoration: underline;
+        }
+
+        /* Product image preview */
+        #imagePreview {
+            display: none;
+            width: 200px;
+            max-width: 100%;
+            max-height: 200px;
+            margin-top: 10px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .product-thumbnail {
+            width: 70px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 6px;
+        }
+
+        .no-photo {
+            color: #666;
+            font-size: 12px;
+        }
+
+        #message {
+            display: none;
+            padding: 12px;
+            margin-bottom: 15px;
+            border-radius: 6px;
+        }
+
+        #message.success {
+            display: block;
+            background: #e1f5e5;
+            color: #17632b;
+        }
+
+        #message.error {
+            display: block;
+            background: #ffe5e5;
+            color: #9a1b1b;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 5px 9px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .status-pending {
+            background: #fff0c2;
+            color: #795600;
+        }
+
+        .status-approved {
+            background: #d9f3df;
+            color: #17632b;
+        }
+
+        .status-rejected {
+            background: #ffe0e0;
+            color: #9a1b1b;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        @media (max-width: 600px) {
+            .site-header {
+                padding: 12px 5%;
+            }
+
+            .brand-logo {
+                width: 42px;
+                height: 42px;
+            }
+
+            .brand-name {
+                font-size: 21px;
+            }
+
+            .header-nav {
+                gap: 12px;
+            }
+
+            .header-nav a {
+                font-size: 13px;
+            }
+        }

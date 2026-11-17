@@ -1,0 +1,320 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Register | AgriConnect Uganda</title>
+<meta content="Create your free AgriConnect account — join as a farmer or buyer." name="description"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="{% static 'pages/register.css' %}" rel="stylesheet"/>
+</head>
+<body>
+<nav class="top-nav">
+<a class="brand" href="{% url 'home' %}">
+<img alt="AgriConnect Logo" class="brand-logo" src="{% static 'pages/images/Coffee.jpg' %}"/>
+    AgriConnect
+  </a>
+<ul class="nav-links-top">
+<li><a href="{% url 'home' %}">Home</a></li>
+<li><a href="{% url 'login' %}">Login</a></li>
+</ul>
+</nav>
+<div class="page">
+<div class="reg-card">
+<div class="card-header">
+<img alt="AgriConnect coffee logo" class="card-icon" src="{% static 'pages/images/Coffee.jpg' %}"/>
+<h1>Create Your Account</h1>
+<p>Join Uganda's leading agricultural marketplace</p>
+</div>
+<!-- Profile picture -->
+<div class="pic-upload">
+<label for="profilePicInput" title="Click to upload profile photo">
+<div class="pic-ring" id="picRing">
+<img alt="Profile picture preview" id="picPreview"/>
+<div class="pic-placeholder" id="picPlaceholder">
+<span></span>
+<small>Upload Photo</small>
+</div>
+</div>
+</label>
+<input accept="image/*" id="profilePicInput" type="file"/>
+<p class="pic-note">Optional profile photo (max 3 MB)</p>
+</div>
+<!-- Role selection -->
+<div class="role-tabs" id="roleTabs">
+<button class="role-tab-btn selected" data-role="farmer" type="button">
+<span class="icon"></span>
+<div><strong>Farmer</strong><br/><small>Sell your produce</small></div>
+</button>
+<button class="role-tab-btn" data-role="buyer" type="button">
+<span class="icon"></span>
+<div><strong>Buyer</strong><br/><small>Buy fresh produce</small></div>
+</button>
+</div>
+<!-- Alert -->
+<div aria-live="polite" class="alert" id="alertBox" role="alert"></div>
+<form id="regForm" novalidate>
+{% csrf_token %}
+<input id="selectedRole" type="hidden" value="farmer"/>
+<div class="form-grid">
+<div class="section-label">Personal Information</div>
+<div class="field full">
+<label for="fullName">Full Name *</label>
+<div class="input-wrap">
+<span class="input-icon"></span>
+<input id="fullName" placeholder="Your full name" required="" type="text"/>
+</div>
+</div>
+<div class="field">
+<label for="username">Username *</label>
+<div class="input-wrap">
+<span class="input-icon"></span>
+<input autocomplete="username" id="username" placeholder="Choose a username" required="" type="text"/>
+</div>
+</div>
+<div class="field">
+<label for="phone">Phone Number</label>
+<div class="input-wrap">
+<span class="input-icon"></span>
+<input id="phone" placeholder="+256..." type="tel"/>
+</div>
+</div>
+<div class="field full">
+<label for="email">Email Address *</label>
+<div class="input-wrap">
+<span class="input-icon"></span>
+<input id="email" placeholder="you@example.com" required="" type="email"/>
+</div>
+</div>
+<div class="field full">
+<label for="district">District *</label>
+<div class="input-wrap">
+<span class="input-icon"></span>
+<input id="district" placeholder="e.g. Mbarara" required="" type="text"/>
+</div>
+</div>
+<div class="section-label">Security</div>
+<div class="field">
+<label for="password">Password *</label>
+<div class="input-wrap has-toggle">
+<span class="input-icon"></span>
+<input autocomplete="new-password" id="password" placeholder="Min. 6 characters" required="" type="password"/>
+<button aria-label="View password" aria-pressed="false" class="eye-btn" id="togglePw1" type="button">View</button>
+</div>
+<div class="strength-bar"><div class="strength-fill" id="strengthFill"></div></div>
+<div class="strength-text" id="strengthText"></div>
+</div>
+<div class="field">
+<label for="confirmPw">Confirm Password *</label>
+<div class="input-wrap has-toggle">
+<span class="input-icon"></span>
+<input autocomplete="new-password" id="confirmPw" placeholder="Repeat your password" required="" type="password"/>
+<button aria-label="View confirmation password" aria-pressed="false" class="eye-btn" id="togglePw2" type="button">View</button>
+</div>
+</div>
+<div class="section-label">Account Recovery</div>
+<div class="field full">
+<label for="secQuestion">Security Question *</label>
+<div class="input-wrap">
+<span class="input-icon"></span>
+<select id="secQuestion" required="">
+<option value="">— Choose a question —</option>
+<option>What is the name of your first pet?</option>
+<option>What is the name of the town you were born in?</option>
+<option>What was your childhood nickname?</option>
+<option>What is the name of your primary school?</option>
+<option>What is your mother's maiden name?</option>
+<option>What was the name of your first employer?</option>
+<option>What was the make of your first car or motorcycle?</option>
+<option>What is the name of your favourite teacher?</option>
+</select>
+</div>
+</div>
+<div class="field full">
+<label for="secAnswer">Your Answer *</label>
+<div class="input-wrap">
+<span class="input-icon"></span>
+<input autocomplete="off" id="secAnswer" placeholder="Type your answer (case-insensitive)" required="" type="text"/>
+</div>
+<small class="register-note-text">Remember this — it's how you'll recover your password if you forget it.</small>
+</div>
+<button class="btn-register" id="submitBtn" type="submit">Create Account</button>
+</div></form>
+<p class="card-footer-text">Already have an account? <a href="{% url 'login' %}">Sign in here</a></p>
+</div>
+<footer class="site-footer">© 2026 AgriConnect Uganda. Connecting farmers and buyers.</footer>
+</div>
+<script src="{% static 'js/auth.js' %}"></script>
+<script>
+  if (typeof Auth !== 'undefined' && Auth.redirectIfLoggedIn) {
+    Auth.redirectIfLoggedIn();
+  }
+
+  // ── Profile Pic Upload ──────────────────────────────────────────────────
+  const picInput   = document.getElementById('profilePicInput');
+  const picPreview = document.getElementById('picPreview');
+  const picPH      = document.getElementById('picPlaceholder');
+  let profilePicData = '';
+
+  picInput.addEventListener('change', () => {
+    const file = picInput.files[0];
+    if (!file) return;
+    if (!file.type.startsWith('image/')) { alert('Please select an image file.'); return; }
+    if (file.size > 3 * 1024 * 1024) { alert('Image must be 3 MB or smaller.'); return; }
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      const img = new Image();
+      img.onload = () => {
+        const MAX = 300;
+        const scale = Math.min(1, MAX / Math.max(img.width, img.height));
+        const c = document.createElement('canvas');
+        c.width  = Math.round(img.width  * scale);
+        c.height = Math.round(img.height * scale);
+        c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+        profilePicData = c.toDataURL('image/jpeg', 0.8);
+        picPreview.src = profilePicData;
+        picPreview.style.display = 'block';
+        picPH.style.display = 'none';
+      };
+      img.src = reader.result;
+    };
+    reader.readAsDataURL(file);
+  });
+
+  // ── Role Tabs ───────────────────────────────────────────────────────────
+  document.querySelectorAll('.role-tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.role-tab-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      document.getElementById('selectedRole').value = btn.dataset.role;
+    });
+  });
+
+  // ── Password Visibility ─────────────────────────────────────────────────
+  function togglePw(inputId, btnId) {
+    const input = document.getElementById(inputId);
+    const btn   = document.getElementById(btnId);
+    btn.addEventListener('click', () => {
+      const isVisible = input.type === 'text';
+      input.type = isVisible ? 'password' : 'text';
+      btn.textContent = isVisible ? 'View' : 'Hide';
+      btn.setAttribute('aria-label', `${isVisible ? 'View' : 'Hide'} ${inputId === 'confirmPw' ? 'confirmation password' : 'password'}`);
+      btn.setAttribute('aria-pressed', String(!isVisible));
+    });
+  }
+  togglePw('password', 'togglePw1');
+  togglePw('confirmPw', 'togglePw2');
+
+  // ── Password Strength ───────────────────────────────────────────────────
+  document.getElementById('password').addEventListener('input', function() {
+    const pw = this.value;
+    let score = 0;
+    if (pw.length >= 6) score++;
+    if (pw.length >= 10) score++;
+    if (/[A-Z]/.test(pw)) score++;
+    if (/[0-9]/.test(pw)) score++;
+    if (/[^A-Za-z0-9]/.test(pw)) score++;
+
+    const fill = document.getElementById('strengthFill');
+    const text = document.getElementById('strengthText');
+    const labels = ['', 'Weak', 'Fair', 'Good', 'Strong', 'Very Strong'];
+    const colors = ['', '#e74c3c', '#f39c12', '#f1c40f', '#27ae60', '#1abc9c'];
+    fill.style.width  = (score * 20) + '%';
+    fill.style.background = colors[score] || '';
+    text.textContent = pw.length ? labels[score] || 'Very Strong' : '';
+    text.style.color = colors[score] || '';
+  });
+
+  // ── Alert helpers ────────────────────────────────────────────────────────
+  const alertBox = document.getElementById('alertBox');
+  function showAlert(msg, type='error') { alertBox.textContent = msg; alertBox.className = 'alert ' + type + ' show'; alertBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
+  function hideAlert() { alertBox.className = 'alert'; }
+
+  // ── Registration: send the form to Django and MongoDB ───────────────────
+  document.getElementById('regForm').addEventListener('submit', async e => {
+    e.preventDefault();
+    hideAlert();
+
+    const form = e.currentTarget;
+    if (!form.reportValidity()) return;
+
+    const password = document.getElementById('password').value;
+    const confirmPassword = document.getElementById('confirmPw').value;
+
+    if (password.length < 6) {
+      showAlert('Password must contain at least 6 characters.');
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      showAlert('Passwords do not match.');
+      return;
+    }
+
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    btn.textContent = 'Creating account…';
+
+    const csrfInput = document.querySelector('[name=csrfmiddlewaretoken]');
+    if (!csrfInput) {
+      showAlert('Security token is missing. Refresh the page and try again.');
+      btn.disabled = false;
+      btn.textContent = 'Create Account';
+      return;
+    }
+
+    const registrationData = {
+      fullName: document.getElementById('fullName').value.trim(),
+      username: document.getElementById('username').value.trim(),
+      email: document.getElementById('email').value.trim(),
+      password: password,
+      confirmPassword: confirmPassword,
+      role: document.getElementById('selectedRole').value,
+      phone: document.getElementById('phone').value.trim(),
+      district: document.getElementById('district').value.trim(),
+      securityQuestion: document.getElementById('secQuestion').value,
+      securityAnswer: document.getElementById('secAnswer').value.trim(),
+      profilePic: profilePicData
+    };
+
+    try {
+      const response = await fetch("{% url 'register' %}", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': csrfInput.value
+        },
+        body: JSON.stringify(registrationData),
+        credentials: 'same-origin'
+      });
+
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        showAlert(result.message || 'Registration failed. Please try again.');
+        return;
+      }
+
+      showAlert(result.message || 'Account created successfully!', 'success');
+      btn.textContent = 'Account Created';
+
+      setTimeout(() => {
+        window.location.href = "{% url 'login' %}";
+      }, 1500);
+
+    } catch (error) {
+      console.error('Registration error:', error);
+      showAlert('Could not connect to the server. Check that Django is running and try again.');
+    } finally {
+      if (btn.textContent !== 'Account Created') {
+        btn.disabled = false;
+        btn.textContent = 'Create Account';
+      }
+    }
+  });
+</script>
+</body>
+</html>

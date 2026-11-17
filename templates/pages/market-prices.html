@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+{% load static %}
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Market Prices | AgriConnect</title>
+<link href="{% static 'pages/style.css' %}" rel="stylesheet"/>
+<link href="{% static 'pages/market-prices.css' %}" rel="stylesheet"/></head>
+<body>
+<header>
+<div class="container navbar">
+<a class="logo" href="{% url 'home' %}">
+<img alt="Coffee cherries" src="{% static 'pages/images/Coffee.jpg' %}"/>
+            AgriConnect
+        </a>
+<nav>
+<ul class="nav-links">
+<li><a href="{% url 'home' %}">Home</a></li>
+<li><a href="{% url 'products' %}">Products</a></li>
+<li><a class="active" href="{% url 'market_prices' %}">Market Prices</a></li>
+<li><a href="{% url 'about' %}">About</a></li>
+<li><a href="{% url 'register' %}">Register</a></li>
+<li><a href="{% url 'login' %}">Login</a></li>
+</ul>
+</nav>
+</div>
+</header>
+<section class="page-hero">
+<div class="container">
+<span class="eyebrow">MARKET INFORMATION</span>
+<h1>Agricultural Market Prices</h1>
+<p>
+            Compare sample prices to help guide buying and
+            selling decisions.
+        </p>
+</div>
+</section>
+<section class="section">
+<div class="container">
+<div class="notice">
+            Important: These are demonstration prices, not verified
+            current market quotes. Update them using reliable,
+            current market information before publishing.
+        </div>
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>Produce</th>
+<th>District</th>
+<th>Unit</th>
+<th>Sample Price</th>
+<th>Updated</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Matooke</td>
+<td>Mukono</td>
+<td>Bunch</td>
+<td>UGX 9,000</td>
+<td>Demo data</td>
+</tr>
+<tr>
+<td>Maize</td>
+<td>Gulu</td>
+<td>Kg</td>
+<td>UGX 1,100</td>
+<td>Demo data</td>
+</tr>
+<tr>
+<td>Coffee</td>
+<td>Mbarara</td>
+<td>Kg</td>
+<td>UGX 7,500</td>
+<td>Demo data</td>
+</tr>
+<tr>
+<td>Beans</td>
+<td>Mbale</td>
+<td>Kg</td>
+<td>Not provided</td>
+<td>To be updated</td>
+</tr>
+<tr>
+<td>Tomatoes</td>
+<td>Wakiso</td>
+<td>Crate</td>
+<td>Not provided</td>
+<td>To be updated</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="cta inline-style-market_prices-74">
+<div>
+<h2>Want to sell your produce?</h2>
+<p>Join AgriConnect and explore the farmer marketplace.</p>
+</div>
+<a class="btn btn-gold" href="{% url 'register' %}">
+                Get Started →
+            </a>
+</div>
+</div>
+</section>
+<footer class="footer">
+<div class="container">
+<div class="footer-bottom">
+            © 2026 AgriConnect.
+        </div>
+</div>
+</footer>
+</body>
+</html>

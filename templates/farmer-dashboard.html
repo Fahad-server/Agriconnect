@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+{% load static %}
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Farmer Dashboard | AgriConnect</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="{% static 'pages/farmer-dashboard.css' %}" rel="stylesheet"/></head>
+<body>
+<header class="site-hdr">
+<a class="brand" href="{% url 'home' %}">
+<img alt="AgriConnect" class="brand-logo" src="{% static 'pages/images/Coffee.jpg' %}"/>
+    AgriConnect
+  </a>
+<div class="hdr-right">
+<div class="user-chip">
+<div class="av" id="hdrAv">F</div>
+<span class="un" id="hdrName">Farmer</span>
+</div>
+<button class="logout-lnk" id="logoutBtn">Logout</button>
+</div>
+</header>
+<div class="layout">
+<aside class="sidebar">
+<a class="active" href="#overview"><span class="ni"></span>Overview</a>
+<a href="#add-product"><span class="ni"></span>Add Product</a>
+<a href="#my-products"><span class="ni"></span>My Products</a>
+<a href="#profile"><span class="ni"></span>Profile</a>
+</aside>
+<main class="main">
+<!-- Profile banner -->
+<div class="profile-card" id="profileBanner">
+<div class="profile-av" id="profileAv"></div>
+<div class="profile-info">
+<h2 id="profileName">Farmer</h2>
+<p id="profileDistrict">District · Phone</p>
+<p class="inline-style-farmer_dashboard-33" id="profileEmail"></p>
+</div>
+<button class="profile-edit-btn" id="editProfileBtn"> Edit Profile</button>
+</div>
+<!-- Summary -->
+<div class="summary" id="overview">
+<div class="sum-card"><h3>Total Products</h3><div class="val" id="cTotal">0</div></div>
+<div class="sum-card"><h3>Pending</h3><div class="val" id="cPending">0</div></div>
+<div class="sum-card inline-style-farmer_dashboard-42"><h3>Approved</h3><div class="val" id="cApproved">0</div></div>
+</div>
+<!-- Add Product -->
+<div class="panel" id="add-product">
+<h2> Add a Product</h2>
+<div class="msg" id="formMsg"></div>
+<form id="productForm">
+<div class="fg">
+<div class="field">
+<label for="pName">Product Name *</label>
+<input id="pName" maxlength="100" placeholder="e.g. Fresh Matooke" required="" type="text"/>
+</div>
+<div class="field">
+<label for="pCat">Category *</label>
+<select id="pCat" required="">
+<option value="">Select category</option>
+<option>Cereals and Grains</option><option>Fruits</option>
+<option>Vegetables</option><option>Coffee</option>
+<option>Livestock</option><option>Dairy</option>
+<option>Poultry</option><option>Other</option>
+</select>
+</div>
+<div class="field">
+<label for="pQty">Quantity *</label>
+<input id="pQty" min="0.01" placeholder="e.g. 100" required="" step="any" type="number"/>
+</div>
+<div class="field">
+<label for="pUnit">Unit *</label>
+<select id="pUnit" required="">
+<option value="">Select unit</option>
+<option value="kg">Kilograms (kg)</option><option value="bags">Bags</option>
+<option value="bunches">Bunches</option><option value="crates">Crates</option>
+<option value="litres">Litres</option><option value="pieces">Pieces</option>
+<option value="tonnes">Tonnes</option>
+</select>
+</div>
+<div class="field">
+<label for="pPrice">Price per Unit (UGX) *</label>
+<input id="pPrice" min="1" placeholder="e.g. 2500" required="" step="1" type="number"/>
+</div>
+<div class="field">
+<label for="pDist">District *</label>
+<input id="pDist" maxlength="100" placeholder="e.g. Mbarara" required="" type="text"/>
+</div>
+<div class="field full">
+<label for="pDesc">Description</label>
+<textarea id="pDesc" maxlength="1000" placeholder="Quality, freshness, harvest date…"></textarea>
+</div>
+<div class="field full">
+<label for="pImg">Product Photo *</label>
+<input accept="image/*" id="pImg" required="" type="file"/>
+<small class="inline-style-farmer_dashboard-91">Max 5 MB · JPEG/PNG/WebP</small>
+<img alt="Preview" id="imgPreview"/>
+</div>
+<div class="field full">
+<button class="primary-btn" id="submitBtn" type="submit"> Upload Product</button>
+</div>
+</div>
+</form>
+</div>
+<!-- My Products -->
+<div class="panel" id="my-products">
+<h2> My Products</h2>
+<p class="inline-style-farmer_dashboard-97">New products wait for admin approval before appearing in the marketplace.</p>
+<div class="tw">
+<table>
+<thead><tr><th>Photo</th><th>Product</th><th>Qty</th><th>Price/Unit</th><th>District</th><th>Status</th><th>Action</th></tr></thead>
+<tbody id="prodBody"></tbody>
+</table>
+</div>
+<p class="empty-msg inline-style-farmer_dashboard-110" id="emptyMsg">You have not uploaded any products yet.</p>
+</div>
+<!-- Profile section -->
+<div class="panel" id="profile">
+<h2> My Profile</h2>
+<div class="inline-style-farmer_dashboard-113" id="profileDetails"></div>
+</div>
+</main>
+</div>
+<!-- Edit Profile Modal -->
+<div class="overlay" id="editOverlay">
+<div class="modal">
+<button class="modal-close" id="closeModal">×</button>
+<h3> Edit Profile</h3>
+<div class="msg" id="editMsg"></div>
+<div class="inline-style-farmer_dashboard-119">
+<div class="inline-style-farmer_dashboard-120">
+<label class="inline-style-farmer_dashboard-121" for="editPicInput" title="Change profile photo">
+<div class="inline-style-farmer_dashboard-122" id="editAvCircle"></div>
+<small class="inline-style-farmer_dashboard-123">Change Photo</small>
+</label>
+<input accept="image/*" class="inline-style-farmer_dashboard-124" id="editPicInput" type="file"/>
+</div>
+<div class="field"><label for="eFN">Full Name</label><input id="eFN" type="text"/></div>
+<div class="field"><label for="ePhone">Phone</label><input id="ePhone" type="tel"/></div>
+<div class="field"><label for="eDist">District</label><input id="eDist" type="text"/></div>
+<div class="field"><label for="eEmail">Email</label><input id="eEmail" type="email"/></div>
+<div class="field"><label for="eNewPw">New Password (leave blank to keep current)</label><input id="eNewPw" placeholder="New password" type="password"/></div>
+<button class="primary-btn inline-style-farmer_dashboard-140" id="saveProfileBtn"> Save Changes</button>
+</div>
+</div>
+</div>
+<div class="toast" id="toast"></div>
+{{ server_user|json_script:"agri-server-user" }}
+  <script src="{% static 'js/auth.js' %}"></script>
+<script>
+const me=Auth.requireRole('farmer','/login/');
+if(!me)throw 0;
+
+let editPicData='',selectedImgData='';
+
+// ── Header & banner ──────────────────────────────────────────────────────
+function refreshUI(){
+  const u=Auth.getCurrentUser();
+  if(!u)return;
+  // header
+  document.getElementById('hdrName').textContent=u.fullName||'Farmer';
+  const hAv=document.getElementById('hdrAv');
+  if(u.profilePic){hAv.innerHTML=`<img src="${u.profilePic}" alt="">`;}
+  else{hAv.textContent=(u.fullName||'F')[0].toUpperCase();}
+  // banner
+  document.getElementById('profileName').textContent=u.fullName||'Farmer';
+  document.getElementById('profileDistrict').textContent=(u.district||'')+(u.phone?` · ${u.phone}`:'');
+  document.getElementById('profileEmail').textContent=u.email||'';
+  const bAv=document.getElementById('profileAv');
+  if(u.profilePic){bAv.innerHTML=`<img src="${u.profilePic}" alt="" class="js-inline-style-farmer_dashboard-1">`;}
+  else{bAv.textContent='';}
+  // profile section
+  document.getElementById('profileDetails').innerHTML=`
+    <p> <strong>Name:</strong> ${u.fullName||'—'}</p>
+    <p> <strong>Username:</strong> ${u.username}</p>
+    <p> <strong>Email:</strong> ${u.email||'—'}</p>
+    <p> <strong>Phone:</strong> ${u.phone||'—'}</p>
+    <p> <strong>District:</strong> ${u.district||'—'}</p>
+    <p> <strong>Role:</strong> Farmer</p>
+    <p> <strong>Joined:</strong> ${new Date(u.createdAt).toLocaleDateString()}</p>`;
+}
+
+// ── Toast ────────────────────────────────────────────────────────────────
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2600);}
+
+// ── Logout ───────────────────────────────────────────────────────────────
+document.getElementById('logoutBtn').addEventListener('click',async()=>{if(confirm('Log out?')){await Auth.logout();location.href='/login/';}});
+
+// ── Image compress ────────────────────────────────────────────────────────
+function compressImg(file,maxPx=1000,quality=0.75){
+  return new Promise((res,rej)=>{
+    if(!file||!file.type.startsWith('image/'))return rej(new Error('Please select a valid image.'));
+    if(file.size>5*1024*1024)return rej(new Error('Image must be 5 MB or smaller.'));
+    const rd=new FileReader();
+    rd.onerror=()=>rej(new Error('Could not read image.'));
+    rd.onload=()=>{
+      const img=new Image();
+      img.onerror=()=>rej(new Error('Image could not be opened.'));
+      img.onload=()=>{
+        const sc=Math.min(1,maxPx/Math.max(img.width,img.height));
+        const c=document.createElement('canvas');c.width=Math.round(img.width*sc);c.height=Math.round(img.height*sc);
+        const ctx=c.getContext('2d');if(!ctx)return rej(new Error('Canvas unavailable.'));
+        ctx.drawImage(img,0,0,c.width,c.height);res(c.toDataURL('image/jpeg',quality));
+      };img.src=rd.result;};rd.readAsDataURL(file);
+  });
+}
+
+// ── Product form ──────────────────────────────────────────────────────────
+const imgInput=document.getElementById('pImg'),imgPreview=document.getElementById('imgPreview');
+const formMsg=document.getElementById('formMsg');
+
+function showMsg(el,msg,type='error'){el.textContent=msg;el.className='msg '+type+' show';}
+function hideMsg(el){el.className='msg';}
+
+imgInput.addEventListener('change',async()=>{
+  selectedImgData='';imgPreview.style.display='none';imgPreview.src='';
+  const f=imgInput.files[0];if(!f)return;
+  try{selectedImgData=await compressImg(f);imgPreview.src=selectedImgData;imgPreview.style.display='block';}
+  catch(e){imgInput.value='';showMsg(formMsg,e.message);}
+});
+
+document.getElementById('productForm').addEventListener('submit',async e=>{
+  e.preventDefault();hideMsg(formMsg);
+  const btn=document.getElementById('submitBtn');
+  btn.disabled=true;btn.textContent='Saving…';
+  try{
+    if(!selectedImgData&&!imgInput.files[0])throw new Error('Please select a product photo.');
+    if(!selectedImgData)selectedImgData=await compressImg(imgInput.files[0]);
+    const prod={
+      id:'p_'+Date.now()+'_'+Math.random().toString(36).slice(2,7),
+      farmerId:me.id,farmerName:me.fullName,
+      name:document.getElementById('pName').value.trim(),
+      category:document.getElementById('pCat').value,
+      quantity:Number(document.getElementById('pQty').value),
+      unit:document.getElementById('pUnit').value,
+      price:Number(document.getElementById('pPrice').value),
+      district:document.getElementById('pDist').value.trim(),
+      description:document.getElementById('pDesc').value.trim(),
+      image:selectedImgData,status:'Pending',
+      createdAt:new Date().toISOString()
+    };
+    if(!prod.name||!prod.category||!prod.unit||prod.quantity<=0||prod.price<=0||!prod.district)
+      throw new Error('Please complete all required fields correctly.');
+    const saved=await Auth.addProduct(prod);
+    if(!saved.ok)throw new Error(saved.error);
+    document.getElementById('productForm').reset();
+    selectedImgData='';imgPreview.style.display='none';
+    renderProducts();
+    showMsg(formMsg,' Product uploaded! Awaiting admin approval.','success');
+  }catch(err){showMsg(formMsg,err.message);}
+  finally{btn.disabled=false;btn.textContent=' Upload Product';}
+});
+
+// ── Render products ───────────────────────────────────────────────────────
+function renderProducts(){
+  const prods=Auth.getProductsByFarmer(me.id);
+  document.getElementById('cTotal').textContent=prods.length;
+  document.getElementById('cPending').textContent=prods.filter(p=>p.status==='Pending').length;
+  document.getElementById('cApproved').textContent=prods.filter(p=>p.status==='Approved').length;
+  const body=document.getElementById('prodBody');
+  const empty=document.getElementById('emptyMsg');
+  if(!prods.length){body.innerHTML='';empty.style.display='block';return;}
+  empty.style.display='none';
+  const badges={Pending:'b-p',Approved:'b-a',Rejected:'b-r'};
+  body.innerHTML=prods.map(p=>`<tr>
+    <td>${p.image?`<img src="${p.image}" class="thumb" alt="">`:''}</td>
+    <td><strong>${p.name}</strong><br><small class="js-inline-style-farmer_dashboard-2">${p.category||''}</small></td>
+    <td>${p.quantity} ${p.unit}</td>
+    <td>UGX ${Number(p.price||0).toLocaleString()}</td>
+    <td>${p.district||'—'}</td>
+    <td><span class="badge ${badges[p.status]||'b-p'}">${p.status}</span></td>
+    <td><button class="del-btn js-inline-style-farmer_dashboard-3" onclick="editProd('${p.id}')">Edit</button><button class="del-btn" onclick="delProd('${p.id}')"> Delete</button></td>
+  </tr>`).join('');
+}
+
+async function editProd(id){
+  const p=Auth.getProductsByFarmer(me.id).find(item=>item.id===id);
+  if(!p)return;
+  const name=prompt('Product name:',p.name||''); if(name===null)return;
+  const category=prompt('Category:',p.category||''); if(category===null)return;
+  const quantity=prompt('Quantity:',String(p.quantity??'')); if(quantity===null)return;
+  const unit=prompt('Unit (kg, bag, bunch, etc.):',p.unit||''); if(unit===null)return;
+  const price=prompt('Price per unit (UGX):',String(p.price??'')); if(price===null)return;
+  const district=prompt('District:',p.district||''); if(district===null)return;
+  const description=prompt('Description:',p.description||''); if(description===null)return;
+  const q=Number(quantity), cost=Number(price);
+  if(!name.trim()||!category.trim()||!unit.trim()||!Number.isFinite(q)||q<=0||!Number.isFinite(cost)||cost<=0||!district.trim()){
+    alert('Please enter a name, category, unit, district, a positive quantity and a positive price.');
+    return;
+  }
+  const saved=await Auth.updateProduct(id,{name:name.trim(),category:category.trim(),quantity:q,unit:unit.trim(),price:cost,district:district.trim(),description:description.trim(),status:'Pending',updatedAt:new Date().toISOString()});
+  if(!saved.ok){toast(saved.error);return;}
+  renderProducts();
+  toast('Product updated and sent for admin approval.');
+}
+async function delProd(id){
+  if(!confirm('Delete this product?'))return;
+  const result=await Auth.deleteProduct(id);
+  if(!result.ok){toast(result.error);return;}
+  renderProducts();toast('Product deleted.');
+}
+
+// ── Edit Profile ─────────────────────────────────────────────────────────
+document.getElementById('editProfileBtn').addEventListener('click',openEditModal);
+document.getElementById('closeModal').addEventListener('click',()=>document.getElementById('editOverlay').classList.remove('open'));
+
+function openEditModal(){
+  const u=Auth.getCurrentUser();
+  document.getElementById('eFN').value=u.fullName||'';
+  document.getElementById('ePhone').value=u.phone||'';
+  document.getElementById('eDist').value=u.district||'';
+  document.getElementById('eEmail').value=u.email||'';
+  document.getElementById('eNewPw').value='';
+  editPicData=u.profilePic||'';
+  const circ=document.getElementById('editAvCircle');
+  if(editPicData){circ.innerHTML=`<img src="${editPicData}" alt="" class="js-inline-style-farmer_dashboard-4">`;}
+  else{circ.textContent='';}
+  hideMsg(document.getElementById('editMsg'));
+  document.getElementById('editOverlay').classList.add('open');
+}
+
+document.getElementById('editPicInput').addEventListener('change',async function(){
+  const f=this.files[0];if(!f)return;
+  try{
+    editPicData=await compressImg(f,300,0.82);
+    const circ=document.getElementById('editAvCircle');
+    circ.innerHTML=`<img src="${editPicData}" alt="" class="js-inline-style-farmer_dashboard-5">`;
+  }catch(e){alert(e.message);}
+});
+
+document.getElementById('saveProfileBtn').addEventListener('click',async()=>{
+  const editMsg=document.getElementById('editMsg');
+  hideMsg(editMsg);
+  const fname=document.getElementById('eFN').value.trim();
+  if(!fname){showMsg(editMsg,'Full name is required.');return;}
+  const changes={
+    fullName:fname,phone:document.getElementById('ePhone').value.trim(),
+    district:document.getElementById('eDist').value.trim(),
+    email:document.getElementById('eEmail').value.trim(),
+    profilePic:editPicData,
+  };
+  const newPw=document.getElementById('eNewPw').value;
+  if(newPw){
+    if(newPw.length<6){showMsg(editMsg,'New password must be at least 6 characters.');return;}
+    // Rebuild hash via same algo
+    changes.password=newPw;
+  }
+  const saved=await Auth.updateUser(me.id,changes);
+  if(!saved.ok){showMsg(editMsg,saved.error);return;}
+  document.getElementById('editOverlay').classList.remove('open');
+  refreshUI();toast('Profile updated!');
+});
+
+// storage changes (e.g. admin approves a product)
+window.addEventListener('storage',()=>renderProducts());
+
+refreshUI();
+Auth.ready.then(renderProducts);
+</script>
+</body>
+</html>
+
