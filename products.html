@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+{% load static %}
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Products | AgriConnect</title>
+<link href="{% static 'pages/style.css' %}" rel="stylesheet"/>
+</head>
+<body>
+<header>
+<div class="container navbar">
+<a class="logo" href="{% url 'home' %}">
+<img alt="AgriConnect" src="{% static 'pages/images/Coffee.jpg' %}"/>
+                AgriConnect
+            </a>
+<button class="nav-toggle" id="navToggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
+<nav class="nav-menu" id="navMenu">
+<ul class="nav-links">
+<li><a href="{% url 'home' %}">Home</a></li>
+<li><a class="active" href="{% url 'products' %}">Products</a></li>
+<li><a href="{% url 'market_prices' %}">Market Prices</a></li>
+<li><a href="{% url 'about' %}">About</a></li>
+<li><a href="{% url 'register' %}">Register</a></li>
+<li><a href="{% url 'login' %}">Login</a></li>
+</ul>
+</nav>
+</div>
+</header>
+<section class="page-hero">
+<div class="container">
+<span class="eyebrow">AGRICULTURAL MARKETPLACE</span>
+<h1>Explore Our Products</h1>
+<p>Browse the range of agricultural products offered by Ugandan farmers.</p>
+</div>
+</section>
+<section class="section">
+<div class="container">
+<div class="notice">
+                The products and prices below are sample data for demonstration purposes.
+            </div>
+<div class="grid">
+<article class="card product-card">
+<div class="image-placeholder">
+<img alt="Fresh Matooke bunches" class="product-image" src="{% static 'pages/images/Matooke.jpg' %}"/>
+</div>
+<div class="card-body">
+<h3>Matooke</h3>
+<p class="muted">Location: Mukono</p>
+<p class="price">UGX 9,000 per bunch</p>
+<p class="muted">Fresh cooking bananas. Confirm quality and availability with the seller.</p>
+<a class="btn btn-primary" href="{% url 'login' %}">Contact Seller</a>
+</div>
+</article>
+<article class="card product-card">
+<div class="image-placeholder">
+<img alt="Maize" class="product-image" src="{% static 'pages/images/Maize.jpg' %}"/>
+</div>
+<div class="card-body">
+<h3>Maize</h3>
+<p class="muted">Location: Gulu</p>
+<p class="price">UGX 1,100 per kg</p>
+<p class="muted">Maize grain listing. Confirm grade, quantity, and availability.</p>
+<a class="btn btn-primary" href="{% url 'login' %}">Contact Seller</a>
+</div>
+</article>
+<article class="card product-card">
+<div class="image-placeholder">
+<img alt="Coffee" class="product-image" src="{% static 'pages/images/cow.jpg' %}"/>
+</div>
+<div class="card-body">
+<h3>Cattle</h3>
+<p class="muted">Location: Mbarara</p>
+<p class="price">UGX 2,500,000 per Head</p>
+<p class="muted">Discover Uganda's cattle breeds for quality milk and beef.</p>
+<a class="btn btn-primary" href="{% url 'login' %}">Contact Seller</a>
+</div>
+</article>
+</div>
+</div>
+</section>
+<footer class="footer">
+<div class="container">
+<div class="footer-bottom">
+                © 2026 AgriConnect.
+            </div>
+</div>
+</footer>
+<script>
+  const navToggle = document.getElementById('navToggle');
+  const navMenu = document.getElementById('navMenu');
+  if (navToggle && navMenu) {
+    navToggle.addEventListener('click', (e) => {
+      e.stopPropagation();
+      navMenu.classList.toggle('open');
+      const isOpen = navMenu.classList.contains('open');
+      navToggle.textContent = isOpen ? '✕' : '☰';
+      navToggle.setAttribute('aria-expanded', isOpen);
+    });
+    document.addEventListener('click', (e) => {
+      if (navMenu.classList.contains('open') && !navMenu.contains(e.target) && e.target !== navToggle) {
+        navMenu.classList.remove('open');
+        navToggle.textContent = '☰';
+        navToggle.setAttribute('aria-expanded', 'false');
+      }
+    });
+  }
+</script>
+</body>
+</html>
+

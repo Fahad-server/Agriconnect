@@ -1,0 +1,360 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>Login | AgriConnect Uganda</title>
+  <meta content="Securely log in to your AgriConnect account — Admin, Farmer, or Buyer." name="description" />
+  <link href="https://fonts.googleapis.com" rel="preconnect" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap"
+    rel="stylesheet" />
+  <link href="{% static 'pages/login.css' %}" rel="stylesheet" />
+</head>
+
+<body>
+  <!-- Navigation -->
+  <nav class="top-nav">
+    <a class="brand" href="{% url 'home' %}">
+      <img alt="AgriConnect Logo" class="brand-logo" src="{% static 'pages/images/Coffee.jpg' %}" />
+      AgriConnect
+    </a>
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
+    <ul class="nav-links-top" id="navLinksTop">
+      <li><a href="{% url 'home' %}">Home</a></li>
+      <li><a href="{% url 'products' %}">Products</a></li>
+      <li><a href="{% url 'market_prices' %}">Market Prices</a></li>
+      <li><a href="{% url 'about' %}">About</a></li>
+      <li><a href="{% url 'register' %}">Register</a></li>
+    </ul>
+  </nav>
+  <!-- Login Page -->
+  <div class="page">
+    <div class="login-card">
+      <div class="card-header">
+        <img alt="AgriConnect coffee logo" class="card-icon" src="{% static 'pages/images/Coffee.jpg' %}" />
+        <h1>Welcome Back</h1>
+        <p>Sign in to your AgriConnect account</p>
+      </div>
+      <!-- Role Selector Tabs -->
+      <div class="role-tabs" role="tablist">
+        <button aria-selected="true" class="role-tab active" data-role="farmer" id="tab-farmer" role="tab">
+          <span class="tab-icon"></span> Farmer
+        </button>
+        <button aria-selected="false" class="role-tab" data-role="buyer" id="tab-buyer" role="tab">
+          <span class="tab-icon"></span> Buyer
+        </button>
+        <button aria-selected="false" class="role-tab" data-role="admin" id="tab-admin" role="tab">
+          <span class="tab-icon"></span> Admin
+        </button>
+      </div>
+      <!-- Alert -->
+      <div aria-live="polite" class="alert" id="alertBox" role="alert"></div>
+      <!-- Login Form -->
+      <form id="loginForm" novalidate="">
+        {% csrf_token %}
+          <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}" />
+        <input id="selectedRole" type="hidden" value="farmer" />
+        <div class="field">
+          <label for="username">Username</label>
+          <div class="input-wrap">
+            <span class="input-icon"></span>
+            <input autocomplete="off" id="username" name="agri_user" placeholder="Enter your username" required=""
+              type="text" />
+          </div>
+        </div>
+        <div class="field">
+          <label for="password">Password</label>
+          <div class="input-wrap has-toggle">
+            <span class="input-icon"></span>
+            <input autocomplete="off" id="password" name="agri_pass" placeholder="Enter your password" required=""
+              type="password" />
+            <button aria-label="View password" aria-pressed="false" class="eye-btn" id="togglePw"
+              type="button">View</button>
+          </div>
+        </div>
+        <button class="btn-login" id="submitBtn" type="submit">Sign In</button>
+      </form>
+      <p class="fp-link"><a id="forgotLink"> Forgot your password?</a></p>
+      <p class="card-footer-text">
+        Don't have an account? <a href="{% url 'register' %}">Create one here</a>
+      </p>
+    </div>
+  </div>
+  <footer class="site-footer">
+    © 2026 AgriConnect Uganda. Connecting farmers and buyers.
+  </footer>
+  <!-- ── Forgot Password Modal ── -->
+  <div aria-label="Password Recovery" aria-modal="true" class="modal-overlay" id="fpOverlay" role="dialog">
+    <div class="modal modal-wrap">
+      <button aria-label="Close" class="modal-close" id="fpClose">×</button>
+      <div class="modal-header">
+        <div class="modal-icon"></div>
+        <h2>Password Recovery</h2>
+        <p id="fpSubtext">Enter your username to begin</p>
+      </div>
+      <!-- Step dots -->
+      <div class="modal-steps">
+        <div class="step-dot active" id="dot1"></div>
+        <div class="step-dot" id="dot2"></div>
+        <div class="step-dot" id="dot3"></div>
+      </div>
+      <!-- Alert -->
+      <div class="modal-alert" id="fpAlert"></div>
+      <!-- Step 1: Username -->
+      <div class="modal-step active" id="fpStep1">
+        <div class="m-field">
+          <label for="fpUsername">Your Username</label>
+          <input autocomplete="username" id="fpUsername" placeholder="Enter your username" type="text" />
+          <span class="m-hint">We'll look up your security question.</span>
+        </div>
+        <button class="modal-btn" id="fpBtn1">→ Next</button>
+      </div>
+      <!-- Step 2: Security Question -->
+      <div class="modal-step" id="fpStep2">
+        <div class="m-field">
+          <label>Your Security Question</label>
+          <div class="question-box" id="fpQuestion">…</div>
+          <label for="fpAnswer">Your Answer</label>
+          <input autocomplete="off" id="fpAnswer" placeholder="Type your answer" type="text" />
+          <span class="m-hint">Answers are not case-sensitive.</span>
+        </div>
+        <button class="modal-btn" id="fpBtn2">→ Verify Answer</button>
+      </div>
+      <!-- Step 3: New Password -->
+      <div class="modal-step" id="fpStep3">
+        <div class="m-field">
+          <label for="fpNewPw">New Password</label>
+          <div class="password-wrap">
+            <input autocomplete="new-password" id="fpNewPw" placeholder="At least 6 characters" type="password" />
+            <button aria-label="View new password" aria-pressed="false" class="eye-btn" id="toggleFpNewPw"
+              type="button">View</button>
+          </div>
+        </div>
+        <div class="m-field">
+          <label for="fpConfPw">Confirm New Password</label>
+          <div class="password-wrap">
+            <input autocomplete="new-password" id="fpConfPw" placeholder="Repeat new password" type="password" />
+            <button aria-label="View confirmation password" aria-pressed="false" class="eye-btn" id="toggleFpConfPw"
+              type="button">View</button>
+          </div>
+        </div>
+        <button class="modal-btn" id="fpBtn3">✓ Reset Password</button>
+      </div>
+    </div>
+  </div>
+  <script src="{% static 'js/auth.js' %}"></script>
+  <script>
+    // Redirect if already logged in
+    Auth.redirectIfLoggedIn();
+
+    // Clear any browser-autofilled values (e.g. saved username/password)
+    setTimeout(() => {
+      document.getElementById('username').value = '';
+      document.getElementById('password').value = '';
+    }, 50);
+
+    const tabs = document.querySelectorAll('.role-tab');
+    const roleInput = document.getElementById('selectedRole');
+    const form = document.getElementById('loginForm');
+    const alertBox = document.getElementById('alertBox');
+    const submitBtn = document.getElementById('submitBtn');
+    const pwInput = document.getElementById('password');
+    const togglePw = document.getElementById('togglePw');
+
+    // Tab switching
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => { t.classList.remove('active'); t.setAttribute('aria-selected', 'false'); });
+        tab.classList.add('active');
+        tab.setAttribute('aria-selected', 'true');
+        roleInput.value = tab.dataset.role;
+        hideAlert();
+      });
+    });
+
+    // Show/hide passwords
+    function attachPasswordToggle(input, button) {
+      button.addEventListener('click', () => {
+        const isVisible = input.type === 'text';
+        input.type = isVisible ? 'password' : 'text';
+        button.textContent = isVisible ? 'View' : 'Hide';
+        button.setAttribute('aria-label', `${isVisible ? 'View' : 'Hide'} ${input.id.includes('Conf') ? 'confirmation password' : 'password'}`);
+        button.setAttribute('aria-pressed', String(!isVisible));
+      });
+    }
+    attachPasswordToggle(pwInput, togglePw);
+    attachPasswordToggle(document.getElementById('fpNewPw'), document.getElementById('toggleFpNewPw'));
+    attachPasswordToggle(document.getElementById('fpConfPw'), document.getElementById('toggleFpConfPw'));
+
+    function showAlert(msg, type = 'error') {
+      alertBox.textContent = msg;
+      alertBox.className = 'alert ' + type + ' show';
+    }
+    function hideAlert() {
+      alertBox.className = 'alert';
+    }
+
+    // Login submit
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      hideAlert();
+
+      const username = document.getElementById('username').value.trim();
+      const password = pwInput.value;
+      const role = roleInput.value;
+
+      if (!username || !password) {
+        showAlert('Please enter your username and password.');
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Signing in…';
+
+      // Small delay to feel natural
+      setTimeout(async () => {
+        try {
+          const csrfInput = document.querySelector('[name=csrfmiddlewaretoken]');
+          const response = await fetch('{% url "api_login" %}', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-CSRFToken': csrfInput ? csrfInput.value : ''
+            },
+            body: JSON.stringify({ username, password, role }),
+            credentials: 'same-origin'
+          });
+          const result = await response.json();
+          if (!response.ok || !result.success) {
+            showAlert(result.message || 'Login failed.');
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Sign In';
+            return;
+          }
+          if (window.Auth && Auth.setSession) Auth.setSession(result.user);
+          showAlert('Login successful! Redirecting…', 'success');
+          const destinations = {
+            admin: '{% url "admin_dashboard" %}',
+            farmer: '{% url "farmer_dashboard" %}',
+            buyer: '{% url "buyer_dashboard" %}'
+          };
+          setTimeout(() => {
+            window.location.replace(destinations[result.role] || '{% url "home" %}');
+          }, 800);
+        } catch (e) {
+          console.error(e);
+          showAlert('An error occurred while logging in.');
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Sign In';
+        }
+      }, 500);
+    });
+
+    // ── Forgot Password Flow ───────────────────────────────────────────────
+    const overlay = document.getElementById('fpOverlay');
+    const fpAlert = document.getElementById('fpAlert');
+    let fpUserId = null; // stored after step 2 verification
+
+    function openFp() {
+      overlay.classList.add('open');
+      goStep(1);
+      document.getElementById('fpUsername').focus();
+    }
+    function closeFp() {
+      overlay.classList.remove('open');
+      fpUserId = null;
+      clearFpAlert();
+      ['fpUsername', 'fpAnswer', 'fpNewPw', 'fpConfPw'].forEach(id => document.getElementById(id).value = '');
+    }
+
+    document.getElementById('forgotLink').addEventListener('click', openFp);
+    document.getElementById('fpClose').addEventListener('click', closeFp);
+    overlay.addEventListener('click', e => { if (e.target === overlay) closeFp(); });
+
+    function fpShowAlert(msg, type = 'err') {
+      fpAlert.textContent = msg;
+      fpAlert.className = 'modal-alert ' + type;
+    }
+    function clearFpAlert() { fpAlert.className = 'modal-alert'; fpAlert.textContent = ''; }
+
+    const subtexts = [
+      'Enter your username to begin',
+      'Answer your security question',
+      'Choose a strong new password'
+    ];
+    function goStep(n) {
+      clearFpAlert();
+      [1, 2, 3].forEach(i => {
+        document.getElementById('fpStep' + i).classList.toggle('active', i === n);
+        const dot = document.getElementById('dot' + i);
+        dot.className = 'step-dot' + (i < n ? ' done' : i === n ? ' active' : '');
+      });
+      document.getElementById('fpSubtext').textContent = subtexts[n - 1];
+    }
+
+    // Step 1 — Find user by username
+    document.getElementById('fpBtn1').addEventListener('click', async () => {
+      const uname = document.getElementById('fpUsername').value.trim();
+      if (!uname) { fpShowAlert('Please enter your username.'); return; }
+      const res = await Auth.getSecurityQuestion(uname);
+      if (!res.ok) { fpShowAlert(res.error); return; }
+      document.getElementById('fpQuestion').textContent = res.question;
+      goStep(2);
+      document.getElementById('fpAnswer').focus();
+    });
+
+    // Step 2 — Verify security answer
+    document.getElementById('fpBtn2').addEventListener('click', async () => {
+      const uname = document.getElementById('fpUsername').value.trim();
+      const answer = document.getElementById('fpAnswer').value;
+      if (!answer) { fpShowAlert('Please type your answer.'); return; }
+      const res = await Auth.verifySecurityAnswer(uname, answer);
+      if (!res.ok) { fpShowAlert(res.error); return; }
+      fpUserId = res.userId;
+      goStep(3);
+      document.getElementById('fpNewPw').focus();
+    });
+
+    // Step 3 — Set new password
+    document.getElementById('fpBtn3').addEventListener('click', async () => {
+      const newPw = document.getElementById('fpNewPw').value;
+      const confPw = document.getElementById('fpConfPw').value;
+      if (!newPw) { fpShowAlert('Please enter a new password.'); return; }
+      const res = await Auth.resetPasswordWithAnswer(fpUserId, newPw, confPw);
+      if (!res.ok) { fpShowAlert(res.error); return; }
+      fpShowAlert(' Password reset! You can now log in with your new password.', 'ok');
+      document.getElementById('fpBtn3').disabled = true;
+      setTimeout(closeFp, 2800);
+    });
+
+    // Allow Enter key in step inputs
+    document.getElementById('fpUsername').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('fpBtn1').click(); });
+    document.getElementById('fpAnswer').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('fpBtn2').click(); });
+    document.getElementById('fpNewPw').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('fpConfPw').focus(); });
+    document.getElementById('fpConfPw').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('fpBtn3').click(); });
+
+    // Mobile nav toggle
+    const navToggle = document.getElementById('navToggle');
+    const navLinksTop = document.getElementById('navLinksTop');
+    if (navToggle && navLinksTop) {
+      navToggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        navLinksTop.classList.toggle('open');
+        const isOpen = navLinksTop.classList.contains('open');
+        navToggle.textContent = isOpen ? '✕' : '☰';
+        navToggle.setAttribute('aria-expanded', isOpen);
+      });
+      document.addEventListener('click', (e) => {
+        if (navLinksTop.classList.contains('open') && !navLinksTop.contains(e.target) && e.target !== navToggle) {
+          navLinksTop.classList.remove('open');
+          navToggle.textContent = '☰';
+          navToggle.setAttribute('aria-expanded', 'false');
+        }
+      });
+    }
+  </script>
+</body>
+
+</html>

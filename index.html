@@ -1,0 +1,263 @@
+{% load static %}
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>AgriConnect Uganda | Connecting Farmers &amp; Buyers</title>
+<meta content="AgriConnect connects Uganda's farmers directly with buyers for better market access, fair prices, and fresh agricultural produce." name="description"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="{% static 'pages/style.css' %}">
+</head>
+<body>
+<!-- Navigation -->
+<header>
+<nav class="navbar home-nav-layout">
+<a class="logo" href="{% url 'home' %}">
+<img src="{% static 'pages/images/Coffee.jpg' %}">
+<span>AgriConnect</span>
+</a>
+<button class="nav-toggle" id="navToggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
+<div class="nav-menu" id="navMenu">
+<ul class="nav-links">
+<li><a class="active" href="{% url 'home' %}">Home</a></li>
+<li><a href="{% url 'products' %}">Products</a></li>
+<li><a href="{% url 'market_prices' %}">Market Prices</a></li>
+<li><a href="{% url 'about' %}">About</a></li>
+</ul>
+<div class="nav-auth" id="navAuth">
+<a class="nav-login" href="/login/">Login</a>
+<a class="nav-signup" href="/register/">Register</a>
+</div>
+</div>
+</nav>
+</header>
+<!-- ── Animated Welcome Banner ── -->
+<div class="welcome-banner" id="welcomeBanner" role="banner">
+<span class="wb-emoji"></span>
+<p class="wb-text">
+    Welcome to <strong>AgriConnect Uganda</strong>
+    Empowering <span class="wb-word" id="wbWord">Farmers</span>
+</p>
+<button aria-label="Close welcome banner" class="wb-close" id="wbClose">×</button>
+</div>
+<!-- Hero -->
+<section class="hero home-hero-layout">
+<div>
+<p class="hero-eyebrow"> Uganda's #1 Agricultural Marketplace</p>
+<h1 class="hero-title">Connecting Farmers<br/>to Better Markets</h1>
+<h2>Fresh produce, fair prices, direct from the farm.</h2>
+<p class="hero-description">AgriConnect empowers Ugandan farmers to sell directly to buyers cutting out middlemen, boosting incomes, and ensuring fresh produce reaches markets faster.</p>
+<div class="hero-btns">
+<a class="btn-hero-primary" href="{% url 'products' %}">Browse Produce</a>
+<a class="btn-hero-outline" href="{% url 'register' %}"> Join Free</a>
+</div>
+</div>
+<div class="hero-art">
+<img alt="Fresh coffee from Ugandan farmers" class="coffee-image" src="{% static 'pages/images/Coffee.jpg' %}"/>
+<p class="coffee-caption"> Fresh coffee from Ugandan highlands</p>
+</div>
+</section>
+<!-- Services -->
+<section class="services">
+<h2>What We Offer</h2>
+<p class="services-sub">Everything you need to buy and sell agricultural produce in Uganda</p>
+<div class="service-container">
+<div class="service-card">
+<div class="svc-icon"></div>
+<h3>For Farmers</h3>
+<p>List your produce, set competitive prices, upload photos, and connect with thousands of buyers across Uganda.</p>
+</div>
+<div class="service-card">
+<div class="svc-icon"></div>
+<h3>For Buyers</h3>
+<p>Discover fresh produce from verified farmers, compare prices, and order directly, no middlemen, better prices.</p>
+</div>
+<div class="service-card">
+<div class="svc-icon"></div>
+<h3>Market Prices</h3>
+<p>Access real-time agricultural market price data to make informed buying and selling decisions every day.</p>
+</div>
+</div>
+</section>
+<!-- Featured Produce -->
+<section class="featured">
+<h2> Featured Produce</h2>
+<div class="produce-container">
+<div class="produce-card">
+<img src="{% static 'pages/images/Matooke.jpg' %}">
+<div class="pc-body">
+<h3>Matooke</h3>
+<p> Mukono District</p>
+<p> Mary Namusoke</p>
+<div class="price-tag">UGX 9,000 / bunch</div>
+<a class="btn" href="{% url 'login' %}">View &amp; Order</a>
+</div>
+</div>
+<div class="produce-card">
+<img src="{% static 'pages/images/Maize.jpg' %}">
+<div class="pc-body">
+<h3>Maize</h3>
+<p> Gulu District</p>
+<p> Peter Okello</p>
+<div class="price-tag">UGX 1,100 / kg</div>
+<a class="btn" href="{% url 'login' %}">View &amp; Order</a>
+</div>
+</div>
+<div class="produce-card">
+<img alt="Fresh coffee cherries" src="{% static 'pages/images/Coffee.jpg' %}"/>
+<div class="pc-body">
+<h3>Coffee</h3>
+<p> Mbarara District</p>
+<p> Kalule fahad</p>
+<div class="price-tag">UGX 7,500 / kg</div>
+<a class="btn" href="{% url 'login' %}">View &amp; Order</a>
+</div>
+</div>
+</div>
+</section>
+<!-- How it works -->
+<section class="how">
+<h2>How AgriConnect Works</h2>
+<div class="steps">
+<div class="step"><div class="step-num">1</div><h3>Create Account</h3><p>Register free as a farmer or buyer in minutes.</p></div>
+<div class="step"><div class="step-num">2</div><h3>List or Browse</h3><p>Farmers upload produce; buyers browse the marketplace.</p></div>
+<div class="step"><div class="step-num">3</div><h3>Connect Directly</h3><p>Buyers order directly from farmers, no middlemen.</p></div>
+<div class="step"><div class="step-num">4</div><h3>Trade Securely</h3><p>All listings are admin-reviewed for quality assurance.</p></div>
+</div>
+</section>
+<!-- CTA -->
+<section class="cta-section">
+<div class="cta-box">
+<h2>Ready to Transform Your Farming Business?</h2>
+<p>Join thousands of Ugandan farmers and buyers on the most trusted agricultural marketplace.</p>
+<div class="cta-btns">
+<a class="btn-hero-primary" href="{% url 'register' %}?role=farmer"> Join as Farmer</a>
+<a class="btn-hero-outline" href="{% url 'register' %}?role=buyer"> Join as Buyer</a>
+</div>
+</div>
+</section>
+<!-- Footer -->
+<footer>
+<div class="footer-grid">
+<div>
+<div class="footer-brand"> AgriConnect</div>
+<p class="footer-desc">Connecting Uganda's farmers directly to markets. Better prices, fresher produce, stronger farming communities.</p>
+</div>
+<div>
+<h3>Quick Links</h3>
+<ul class="footer-links">
+<li><a href="{% url 'home' %}">Home</a></li>
+<li><a href="{% url 'market_prices' %}">Market Prices</a></li>
+<li><a href="{% url 'register' %}">Register</a></li>
+<li><a href="{% url 'login' %}">Login</a></li>
+</ul>
+</div>
+<div>
+<h3>Dashboards</h3>
+<ul class="footer-links">
+<li><a href="{% url 'admin_dashboard' %}">Admin Panel</a></li>
+<li><a href="{% url 'farmer_dashboard' %}">Farmer Portal</a></li>
+<li><a href="{% url 'buyer_dashboard' %}">Buyer Portal</a></li>
+<li><a href="{% url 'about' %}">About Us</a></li>
+</ul>
+</div>
+</div>
+<div class="footer-bottom">
+    © 2026 AgriConnect Uganda. Connecting farmers and buyers across Uganda.
+  </div>
+</footer>
+<script src="{% static 'js/auth.js' %}"></script>
+<script>
+  // If user is logged in, show dashboard link instead of login/register
+  const user = Auth.getCurrentUser();
+  if (user) {
+    const navAuth = document.getElementById('navAuth');
+    const destinations = {
+      admin: '{% url "admin_dashboard" %}',
+      farmer: '{% url "farmer_dashboard" %}',
+      buyer: '{% url "buyer_dashboard" %}',
+    };
+    const dashboardLink = document.createElement('a');
+    dashboardLink.href = destinations[user.role] || '/login/';
+    dashboardLink.className = 'nav-dashboard';
+    dashboardLink.setAttribute('aria-label', 'Go to dashboard');
+
+    const avatar = document.createElement('span');
+    avatar.className = 'nav-profile-avatar';
+    if (user.profilePic) {
+      const image = document.createElement('img');
+      image.src = user.profilePic;
+      image.alt = '';
+      avatar.appendChild(image);
+    } else {
+      avatar.textContent = (user.fullName || user.username || '?').charAt(0).toUpperCase();
+    }
+
+    const dashboardLabel = document.createElement('span');
+    dashboardLabel.textContent = 'Go to Dashboard';
+    dashboardLink.append(avatar, dashboardLabel);
+    navAuth.replaceChildren(dashboardLink);
+  }
+
+  // ── Welcome Banner Typewriter ─
+  const words   = ['Farmers ', 'Buyers ', 'Uganda ', 'Communities ', 'Fresh Produce '];
+  const wbWord  = document.getElementById('wbWord');
+  let wIdx = 0, cIdx = 0, deleting = false;
+
+  function typeWriter() {
+    const target = words[wIdx];
+    if (!deleting) {
+      wbWord.textContent = target.slice(0, ++cIdx);
+      if (cIdx === target.length) {
+        deleting = true;
+        setTimeout(typeWriter, 1800);   // pause before erasing
+        return;
+      }
+    } else {
+      wbWord.textContent = target.slice(0, --cIdx);
+      if (cIdx === 0) {
+        deleting = false;
+        wIdx = (wIdx + 1) % words.length;
+        setTimeout(typeWriter, 300);    // pause before typing next
+        return;
+      }
+    }
+    setTimeout(typeWriter, deleting ? 55 : 80);
+  }
+
+  setTimeout(typeWriter, 1200);   // start after banner has slid in
+
+  // Mobile navigation toggle
+  const navToggle = document.getElementById('navToggle');
+  const navMenu = document.getElementById('navMenu');
+  if (navToggle && navMenu) {
+    navToggle.addEventListener('click', (e) => {
+      e.stopPropagation();
+      navMenu.classList.toggle('open');
+      const isOpen = navMenu.classList.contains('open');
+      navToggle.textContent = isOpen ? '✕' : '☰';
+      navToggle.setAttribute('aria-expanded', isOpen);
+    });
+    document.addEventListener('click', (e) => {
+      if (navMenu.classList.contains('open') && !navMenu.contains(e.target) && e.target !== navToggle) {
+        navMenu.classList.remove('open');
+        navToggle.textContent = '☰';
+        navToggle.setAttribute('aria-expanded', 'false');
+      }
+    });
+  }
+
+  // Close button
+  document.getElementById('wbClose').addEventListener('click', () => {
+    const b = document.getElementById('welcomeBanner');
+    b.style.transition = 'opacity .4s, transform .4s';
+    b.style.opacity = '0';
+    b.style.transform = 'translateY(-100%)';
+    setTimeout(() => b.remove(), 420);
+  });
+</script>
+</body>
+</html>
