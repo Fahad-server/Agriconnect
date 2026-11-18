@@ -16,7 +16,8 @@
 <img alt="Coffee cherries" src="{% static 'pages/images/Coffee.jpg' %}"/>
             AgriConnect
         </a>
-<nav>
+<button class="nav-toggle" id="navToggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
+<nav class="nav-menu" id="navMenu">
 <ul class="nav-links">
 <li><a href="{% url 'home' %}">Home</a></li>
 <li><a href="{% url 'products' %}">Products</a></li>
@@ -113,5 +114,25 @@
         </div>
 </div>
 </footer>
+<script>
+  const navToggle = document.getElementById('navToggle');
+  const navMenu = document.getElementById('navMenu');
+  if (navToggle && navMenu) {
+    navToggle.addEventListener('click', (e) => {
+      e.stopPropagation();
+      navMenu.classList.toggle('open');
+      const isOpen = navMenu.classList.contains('open');
+      navToggle.textContent = isOpen ? '✕' : '☰';
+      navToggle.setAttribute('aria-expanded', isOpen);
+    });
+    document.addEventListener('click', (e) => {
+      if (navMenu.classList.contains('open') && !navMenu.contains(e.target) && e.target !== navToggle) {
+        navMenu.classList.remove('open');
+        navToggle.textContent = '☰';
+        navToggle.setAttribute('aria-expanded', 'false');
+      }
+    });
+  }
+</script>
 </body>
 </html>
