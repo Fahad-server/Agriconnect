@@ -60,8 +60,30 @@
     .pic-ring .pic-placeholder { color: var(--muted); text-align: center; pointer-events: none; }
     .pic-ring .pic-placeholder span { display: block; font-size: 2.2rem; }
     .pic-ring .pic-placeholder small { font-size: .72rem; }
-    #profilePicInput { display: none; }
+    #profilePicInput {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      cursor: pointer;
+      z-index: 10;
+    }
     .pic-note { font-size: .78rem; color: var(--muted); margin-top: 8px; }
+
+    .nav-toggle {
+      display: none;
+      background: #ffffff;
+      border: 1.5px solid var(--border);
+      font-size: 1.5rem;
+      color: var(--dark-green);
+      cursor: pointer;
+      padding: 6px 12px;
+      border-radius: 8px;
+      line-height: 1;
+      transition: all .2s;
+    }
+    .nav-toggle:hover { background: var(--light-green); }
 
     /* Role selector */
     .role-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 24px; }
@@ -129,11 +151,33 @@
     /* Section label */
     .section-label { font-size: .78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--green); margin: 22px 0 14px; border-bottom: 1px solid var(--border); padding-bottom: 6px; grid-column: 1 / -1; }
 
-    @media (max-width: 600px) {
+    @media (max-width: 650px) {
+      .top-nav {
+        position: relative;
+        flex-wrap: wrap;
+        height: auto;
+        min-height: 65px;
+        padding: 10px 5%;
+      }
+      .nav-toggle { display: inline-flex; align-items: center; justify-content: center; }
+      .nav-links-top {
+        display: none;
+        width: 100%;
+        flex-direction: column;
+        background: var(--white);
+        margin-top: 10px;
+        padding: 10px;
+        border-radius: 12px;
+        box-shadow: 0 10px 25px rgba(0,0,0,.1);
+        border: 1px solid var(--border);
+        gap: 4px;
+      }
+      .nav-links-top.open { display: flex; }
+      .nav-links-top li { width: 100%; }
+      .nav-links-top a { display: block; width: 100%; padding: 10px 14px; font-size: .95rem; }
       .form-grid { grid-template-columns: 1fr; }
       .full { grid-column: 1; }
       .reg-card { padding: 28px 18px; }
-      .nav-links-top { display: none; }
       .role-tabs { grid-template-columns: 1fr; }
     }
 

@@ -199,9 +199,45 @@
       font-size: .82rem; color: var(--muted); position: relative; z-index: 1;
     }
 
-    @media (max-width: 500px) {
-      .login-card { padding: 30px 22px; }
-      .nav-links-top { display: none; }
+    .nav-toggle {
+      display: none;
+      background: #ffffff;
+      border: 1.5px solid var(--border);
+      font-size: 1.5rem;
+      color: var(--dark-green);
+      cursor: pointer;
+      padding: 6px 12px;
+      border-radius: 8px;
+      line-height: 1;
+      transition: all .2s;
+    }
+    .nav-toggle:hover { background: var(--light-green); }
+
+    @media (max-width: 650px) {
+      .top-nav {
+        position: relative;
+        flex-wrap: wrap;
+        height: auto;
+        min-height: 65px;
+        padding: 10px 5%;
+      }
+      .nav-toggle { display: inline-flex; align-items: center; justify-content: center; }
+      .nav-links-top {
+        display: none;
+        width: 100%;
+        flex-direction: column;
+        background: var(--white);
+        margin-top: 10px;
+        padding: 10px;
+        border-radius: 12px;
+        box-shadow: 0 10px 25px rgba(0,0,0,.1);
+        border: 1px solid var(--border);
+        gap: 4px;
+      }
+      .nav-links-top.open { display: flex; }
+      .nav-links-top li { width: 100%; }
+      .nav-links-top a { display: block; width: 100%; padding: 10px 14px; font-size: .95rem; }
+      .login-card { padding: 30px 20px; }
     }
 
     /* ── Forgot Password Modal ── */
