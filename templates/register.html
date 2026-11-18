@@ -16,8 +16,12 @@
 <img alt="AgriConnect Logo" class="brand-logo" src="{% static 'pages/images/Coffee.jpg' %}"/>
     AgriConnect
   </a>
-<ul class="nav-links-top">
+<button class="nav-toggle" id="navToggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
+<ul class="nav-links-top" id="navLinksTop">
 <li><a href="{% url 'home' %}">Home</a></li>
+<li><a href="{% url 'products' %}">Products</a></li>
+<li><a href="{% url 'market_prices' %}">Market Prices</a></li>
+<li><a href="{% url 'about' %}">About</a></li>
 <li><a href="{% url 'login' %}">Login</a></li>
 </ul>
 </nav>
@@ -30,17 +34,15 @@
 </div>
 <!-- Profile picture -->
 <div class="pic-upload">
-<label for="profilePicInput" title="Click to upload profile photo">
 <div class="pic-ring" id="picRing">
 <img alt="Profile picture preview" id="picPreview"/>
 <div class="pic-placeholder" id="picPlaceholder">
-<span></span>
+<span>📷</span>
 <small>Upload Photo</small>
 </div>
+<input accept="image/*" id="profilePicInput" type="file" aria-label="Upload profile photo"/>
 </div>
-</label>
-<input accept="image/*" id="profilePicInput" type="file"/>
-<p class="pic-note">Optional profile photo (max 3 MB)</p>
+<p class="pic-note">Optional profile photo (tap circle to upload from phone)</p>
 </div>
 <!-- Role selection -->
 <div class="role-tabs" id="roleTabs">
@@ -159,29 +161,55 @@
   let profilePicData = '';
 
   picInput.addEventListener('change', () => {
-    const file = picInput.files[0];
+    const file = picInput.files && picInput.files[0];
     if (!file) return;
-    if (!file.type.startsWith('image/')) { alert('Please select an image file.'); return; }
-    if (file.size > 3 * 1024 * 1024) { alert('Image must be 3 MB or smaller.'); return; }
+    if (file.size > 30 * 1024 * 1024) { alert('Photo must be 30 MB or smaller.'); return; }
 
-    const reader = new FileReader();
-    reader.onload = () => {
-      const img = new Image();
-      img.onload = () => {
-        const MAX = 300;
-        const scale = Math.min(1, MAX / Math.max(img.width, img.height));
+    function compressAndShow(sourceImg) {
+      try {
+        const MAX = 400;
+        const scale = Math.min(1, MAX / Math.max(sourceImg.width, sourceImg.height));
         const c = document.createElement('canvas');
-        c.width  = Math.round(img.width  * scale);
-        c.height = Math.round(img.height * scale);
-        c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
-        profilePicData = c.toDataURL('image/jpeg', 0.8);
+        c.width  = Math.max(1, Math.round(sourceImg.width  * scale));
+        c.height = Math.max(1, Math.round(sourceImg.height * scale));
+        const ctx = c.getContext('2d');
+        if (!ctx) { alert('Could not initialize image processor.'); return; }
+        ctx.drawImage(sourceImg, 0, 0, c.width, c.height);
+        profilePicData = c.toDataURL('image/jpeg', 0.82);
         picPreview.src = profilePicData;
         picPreview.style.display = 'block';
         picPH.style.display = 'none';
+      } catch (err) {
+        alert('Could not process photo: ' + err.message);
+      }
+    }
+
+    if (window.URL && window.URL.createObjectURL) {
+      const objUrl = URL.createObjectURL(file);
+      const img = new Image();
+      img.onload = () => { URL.revokeObjectURL(objUrl); compressAndShow(img); };
+      img.onerror = () => {
+        URL.revokeObjectURL(objUrl);
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const fbImg = new Image();
+          fbImg.onload = () => compressAndShow(fbImg);
+          fbImg.onerror = () => alert('Could not decode photo. Please choose a JPG or PNG.');
+          fbImg.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
       };
-      img.src = reader.result;
-    };
-    reader.readAsDataURL(file);
+      img.src = objUrl;
+    } else {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const fbImg = new Image();
+        fbImg.onload = () => compressAndShow(fbImg);
+        fbImg.onerror = () => alert('Could not decode photo.');
+        fbImg.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
   });
 
   // ── Role Tabs ───────────────────────────────────────────────────────────
@@ -315,6 +343,26 @@
       }
     }
   });
+
+  // Mobile nav toggle
+  const navToggle = document.getElementById('navToggle');
+  const navLinksTop = document.getElementById('navLinksTop');
+  if (navToggle && navLinksTop) {
+    navToggle.addEventListener('click', (e) => {
+      e.stopPropagation();
+      navLinksTop.classList.toggle('open');
+      const isOpen = navLinksTop.classList.contains('open');
+      navToggle.textContent = isOpen ? '✕' : '☰';
+      navToggle.setAttribute('aria-expanded', isOpen);
+    });
+    document.addEventListener('click', (e) => {
+      if (navLinksTop.classList.contains('open') && !navLinksTop.contains(e.target) && e.target !== navToggle) {
+        navLinksTop.classList.remove('open');
+        navToggle.textContent = '☰';
+        navToggle.setAttribute('aria-expanded', 'false');
+      }
+    });
+  }
 </script>
 </body>
 </html>

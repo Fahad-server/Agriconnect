@@ -65,7 +65,7 @@ def _save_profile_picture(value):
     if normalized.startswith('../') or not normalized.startswith('profile_pictures/'):
         raise ValidationError('Invalid profile picture path.')
     if not default_storage.exists(normalized):
-        raise ValidationError('The profile picture file was not found.')
+        return ''
     return normalized
 
 

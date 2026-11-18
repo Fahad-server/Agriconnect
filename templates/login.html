@@ -20,8 +20,11 @@
       <img alt="AgriConnect Logo" class="brand-logo" src="{% static 'pages/images/Coffee.jpg' %}" />
       AgriConnect
     </a>
-    <ul class="nav-links-top">
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
+    <ul class="nav-links-top" id="navLinksTop">
       <li><a href="{% url 'home' %}">Home</a></li>
+      <li><a href="{% url 'products' %}">Products</a></li>
+      <li><a href="{% url 'market_prices' %}">Market Prices</a></li>
       <li><a href="{% url 'about' %}">About</a></li>
       <li><a href="{% url 'register' %}">Register</a></li>
     </ul>
@@ -331,6 +334,26 @@
     document.getElementById('fpAnswer').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('fpBtn2').click(); });
     document.getElementById('fpNewPw').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('fpConfPw').focus(); });
     document.getElementById('fpConfPw').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('fpBtn3').click(); });
+
+    // Mobile nav toggle
+    const navToggle = document.getElementById('navToggle');
+    const navLinksTop = document.getElementById('navLinksTop');
+    if (navToggle && navLinksTop) {
+      navToggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        navLinksTop.classList.toggle('open');
+        const isOpen = navLinksTop.classList.contains('open');
+        navToggle.textContent = isOpen ? '✕' : '☰';
+        navToggle.setAttribute('aria-expanded', isOpen);
+      });
+      document.addEventListener('click', (e) => {
+        if (navLinksTop.classList.contains('open') && !navLinksTop.contains(e.target) && e.target !== navToggle) {
+          navLinksTop.classList.remove('open');
+          navToggle.textContent = '☰';
+          navToggle.setAttribute('aria-expanded', 'false');
+        }
+      });
+    }
   </script>
 </body>
 

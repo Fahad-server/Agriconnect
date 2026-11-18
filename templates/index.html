@@ -19,14 +19,18 @@
 <img src="{% static 'pages/images/Coffee.jpg' %}">
 <span>AgriConnect</span>
 </a>
-<ul class="nav-links">
+<button class="nav-toggle" id="navToggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
+<div class="nav-menu" id="navMenu" style="display: flex; align-items: center; gap: 18px;">
+<ul class="nav-links" style="display: flex; align-items: center; gap: 6px; margin: 0; padding: 0; list-style: none;">
 <li><a class="active" href="{% url 'home' %}">Home</a></li>
+<li><a href="{% url 'products' %}">Products</a></li>
 <li><a href="{% url 'market_prices' %}">Market Prices</a></li>
 <li><a href="{% url 'about' %}">About</a></li>
 </ul>
-<div class="nav-auth" id="navAuth">
+<div class="nav-auth" id="navAuth" style="display: flex; align-items: center; gap: 8px;">
 <a class="nav-login" href="/login/">Login</a>
 <a class="nav-signup" href="/register/">Register</a>
+</div>
 </div>
 </nav>
 </header>
@@ -225,6 +229,26 @@
   }
 
   setTimeout(typeWriter, 1200);   // start after banner has slid in
+
+  // Mobile navigation toggle
+  const navToggle = document.getElementById('navToggle');
+  const navMenu = document.getElementById('navMenu');
+  if (navToggle && navMenu) {
+    navToggle.addEventListener('click', (e) => {
+      e.stopPropagation();
+      navMenu.classList.toggle('open');
+      const isOpen = navMenu.classList.contains('open');
+      navToggle.textContent = isOpen ? '✕' : '☰';
+      navToggle.setAttribute('aria-expanded', isOpen);
+    });
+    document.addEventListener('click', (e) => {
+      if (navMenu.classList.contains('open') && !navMenu.contains(e.target) && e.target !== navToggle) {
+        navMenu.classList.remove('open');
+        navToggle.textContent = '☰';
+        navToggle.setAttribute('aria-expanded', 'false');
+      }
+    });
+  }
 
   // Close button
   document.getElementById('wbClose').addEventListener('click', () => {
