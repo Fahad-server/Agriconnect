@@ -20,14 +20,14 @@
 <span>AgriConnect</span>
 </a>
 <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
-<div class="nav-menu" id="navMenu" style="display: flex; align-items: center; gap: 18px;">
-<ul class="nav-links" style="display: flex; align-items: center; gap: 6px; margin: 0; padding: 0; list-style: none;">
+<div class="nav-menu" id="navMenu">
+<ul class="nav-links">
 <li><a class="active" href="{% url 'home' %}">Home</a></li>
 <li><a href="{% url 'products' %}">Products</a></li>
 <li><a href="{% url 'market_prices' %}">Market Prices</a></li>
 <li><a href="{% url 'about' %}">About</a></li>
 </ul>
-<div class="nav-auth" id="navAuth" style="display: flex; align-items: center; gap: 8px;">
+<div class="nav-auth" id="navAuth">
 <a class="nav-login" href="/login/">Login</a>
 <a class="nav-signup" href="/register/">Register</a>
 </div>

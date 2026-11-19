@@ -27,6 +27,12 @@ def _save_profile_picture(value):
     if not isinstance(value, str):
         raise ValidationError('Invalid profile picture.')
 
+    # If it's a data URI (compressed image from the client canvas compressor),
+    # validate it and store it directly in MongoDB!
+    # On cloud platforms like Render (free tier), the local container filesystem is
+    # ephemeral and gets completely wiped when the server spins down or restarts.
+    # Storing the lightweight compressed image (~30 KB) directly in MongoDB guarantees
+    # it is permanent and will NEVER disappear on logout, spin-down, or device switch!
     if value.startswith('data:'):
         header, separator, encoded = value.partition(',')
         image_types = {
@@ -35,66 +41,48 @@ def _save_profile_picture(value):
             'data:image/webp;base64': ('webp', 'webp'),
         }
         image_type = image_types.get(header)
-        if not separator or not image_type or len(encoded) > 3 * 1024 * 1024:
-            raise ValidationError('Only JPG, PNG and WebP images up to 2 MB are allowed.')
+        if not separator or not image_type or len(encoded) > 2 * 1024 * 1024:
+            raise ValidationError('Only JPG, PNG and WebP images up to 1.5 MB are allowed.')
         try:
             image_data = base64.b64decode(encoded, validate=True)
         except (binascii.Error, ValueError):
             raise ValidationError('The uploaded image is invalid.')
-        if len(image_data) > 2 * 1024 * 1024:
-            raise ValidationError('Profile picture must not exceed 2 MB.')
+        if len(image_data) > 1.5 * 1024 * 1024:
+            raise ValidationError('Profile picture must not exceed 1.5 MB.')
 
         try:
             picture = Image.open(ContentFile(image_data))
             picture.verify()
-            actual_type = (picture.format or '').lower()
         except Exception:
             raise ValidationError('The uploaded image is invalid.')
-        if actual_type != image_type[0]:
-            raise ValidationError('The uploaded image type does not match its contents.')
 
-        filename = f"profile_pictures/{uuid4().hex}.{image_type[1]}"
-        return default_storage.save(filename, ContentFile(image_data))
+        return value
 
     if value.startswith(('http://', 'https://')):
         return value
     if value.startswith(settings.MEDIA_URL):
-        value = value[len(settings.MEDIA_URL):]
-    value = value.lstrip('/')
-    normalized = os.path.normpath(value).replace('\\', '/')
-    if normalized.startswith('../') or not normalized.startswith('profile_pictures/'):
-        raise ValidationError('Invalid profile picture path.')
-    if not default_storage.exists(normalized):
-        return ''
-    return normalized
+        return value
+    return value
 
 
 def _profile_picture_url(value):
-    if not value or value.startswith(('data:', 'http://', 'https://', settings.MEDIA_URL)):
-        return value or ''
-    return default_storage.url(value)
+    if not value:
+        return ''
+    if value.startswith(('data:', 'http://', 'https://')):
+        return value
+    if value.startswith(settings.MEDIA_URL):
+        return value
+    # If it's a stored relative path and exists on disk, serve via storage url
+    try:
+        if default_storage.exists(value):
+            return default_storage.url(value)
+    except Exception:
+        pass
+    return value
 
 
 def _migrate_legacy_profile_picture(db, user):
-    value = user.get('profile_pic') or user.get('profilePic', '')
-    if not isinstance(value, str) or not value.startswith('data:'):
-        return value
-
-    try:
-        filename = _save_profile_picture(value)
-    except ValidationError:
-        filename = ''
-    selector = {'_id': user['_id']} if user.get('_id') is not None else {'id': user.get('id')}
-    for collection_name in ('users', 'farmers', 'buyers'):
-        result = db[collection_name].update_one(
-            selector,
-            {'$set': {'profile_pic': filename}, '$unset': {'profilePic': ''}},
-        )
-        if result.matched_count:
-            break
-    user['profile_pic'] = filename
-    user.pop('profilePic', None)
-    return filename
+    return user.get('profile_pic') or user.get('profilePic', '')
 
 def _mongo():
     return MongoClient(settings.DATABASES['default']['HOST'], serverSelectionTimeoutMS=7000)
@@ -687,9 +675,13 @@ def api_user_detail(request, user_id):
             old_profile = target.get('profile_pic') or target.get('profilePic', '')
             new_profile = changes.get('profile_pic', old_profile)
             if result.matched_count and old_profile != new_profile and old_profile:
-                old_path = old_profile[len(settings.MEDIA_URL):] if old_profile.startswith(settings.MEDIA_URL) else old_profile
-                if old_path.startswith('profile_pictures/') and not old_path.startswith('../'):
-                    default_storage.delete(old_path)
+                if isinstance(old_profile, str) and not old_profile.startswith('data:'):
+                    old_path = old_profile[len(settings.MEDIA_URL):] if old_profile.startswith(settings.MEDIA_URL) else old_profile
+                    if old_path.startswith('profile_pictures/') and not old_path.startswith('../'):
+                        try:
+                            default_storage.delete(old_path)
+                        except Exception:
+                            pass
         updated = _find_user(db, user_id=user_id)
         _migrate_legacy_profile_picture(db, updated)
         return JsonResponse({'success': True, 'user': _public_user(updated)})
