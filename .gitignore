@@ -194,3 +194,4 @@ connect_cloud_db.*
 copy_compass_uri.*
 copy_uri_to_clipboard.*
 show_my_database.*
+push_to_github.*
