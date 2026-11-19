@@ -1,0 +1,117 @@
+{% load static %}
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>About Us | AgriConnect</title>
+<link href="{% static 'pages/style.css' %}" rel="stylesheet"/>
+<link href="{% static 'pages/about.css' %}" rel="stylesheet"/></head>
+<body>
+<header>
+<div class="container navbar">
+<a class="logo" href="{% url 'home' %}">
+<img alt="Coffee cherries" src="{% static 'pages/images/Coffee.jpg' %}"/>
+            AgriConnect
+        </a>
+<button class="nav-toggle" id="navToggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
+<nav class="nav-menu" id="navMenu">
+<ul class="nav-links">
+<li><a href="{% url 'home' %}">Home</a></li>
+<li><a href="{% url 'products' %}">Products</a></li>
+<li><a href="{% url 'market_prices' %}">Market Prices</a></li>
+<li><a class="active" href="{% url 'about' %}">About</a></li>
+<li><a href="{% url 'register' %}">Register</a></li>
+<li><a href="{% url 'login' %}">Login</a></li>
+</ul>
+</nav>
+</div>
+</header>
+<section class="page-hero">
+<div class="container">
+<span class="eyebrow">ABOUT AGRICONNECT</span>
+<h1>Connecting Uganda's Agriculture Community</h1>
+<p>
+            AgriConnect is a marketplace concept designed to help
+            farmers, traders, retailers, and food businesses discover
+            opportunities and share agricultural market information.
+        </p>
+</div>
+</section>
+<section class="section">
+<div class="container">
+<div class="grid">
+<article class="card">
+<img alt="Ugandan farm" class="about-image" src="{% static 'pages/images/Farm.jpg' %}"/>
+<div class="card-body">
+<h3>Our Purpose</h3>
+<p class="muted">
+                        Make it easier for farmers and buyers to
+                        discover one another and discuss produce
+                        availability and prices.
+                    </p>
+</div>
+</article>
+<article class="card">
+<img alt="Farmers" class="about-image" src="{% static 'pages/images/Farmers.jpg' %}"/>
+<div class="card-body">
+<h3>Who We Serve</h3>
+<p class="muted">
+                        Farmers, produce traders, retailers,
+                        restaurants, and food businesses across Uganda.
+                    </p>
+</div>
+</article>
+<article class="card">
+<img alt="Matooke" class="about-image" src="{% static 'pages/images/Market.jpg' %}"/>
+<div class="card-body">
+<h3>What We Provide</h3>
+<p class="muted">
+                        Sample product listings, market-price displays,
+                        and a starting point for direct buyer-farmer
+                        connections.
+                    </p>
+</div>
+</article>
+</div>
+<div class="cta inline-style-about-49">
+<div>
+<h2>Grow with AgriConnect</h2>
+<p>Explore the marketplace or create an account.</p>
+</div>
+<a class="btn btn-gold" href="{% url 'register' %}">
+                Get Started →
+            </a>
+</div>
+</div>
+</section>
+<footer class="footer">
+<div class="container">
+<div class="footer-bottom">
+            © 2026 AgriConnect Uganda. Connecting farmers and buyers across Uganda.
+        </div>
+</div>
+</footer>
+<script>
+  const navToggle = document.getElementById('navToggle');
+  const navMenu = document.getElementById('navMenu');
+  if (navToggle && navMenu) {
+    navToggle.addEventListener('click', (e) => {
+      e.stopPropagation();
+      navMenu.classList.toggle('open');
+      const isOpen = navMenu.classList.contains('open');
+      navToggle.textContent = isOpen ? '✕' : '☰';
+      navToggle.setAttribute('aria-expanded', isOpen);
+    });
+    document.addEventListener('click', (e) => {
+      if (navMenu.classList.contains('open') && !navMenu.contains(e.target) && e.target !== navToggle) {
+        navMenu.classList.remove('open');
+        navToggle.textContent = '☰';
+        navToggle.setAttribute('aria-expanded', 'false');
+      }
+    });
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+{% load static %}
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Buyer Dashboard | AgriConnect</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="{% static 'pages/buyer-dashboard.css' %}" rel="stylesheet"/></head>
+<body>
+<header class="site-hdr">
+<a class="brand" href="{% url 'home' %}">
+<img alt="AgriConnect" class="brand-logo" src="{% static 'pages/images/Coffee.jpg' %}"/>
+      AgriConnect
+    </a>
+<div class="hdr-right">
+<div class="user-chip">
+<div class="av" id="hdrAv">B</div>
+<span class="un" id="hdrName">Buyer</span>
+</div>
+<button class="logout-lnk" id="logoutBtn">Logout</button>
+</div>
+</header>
+<main class="main">
+<!-- Profile banner -->
+<div class="profile-card">
+<div class="profile-av" id="profAv"></div>
+<div class="profile-info">
+<h2 id="profName">Buyer</h2>
+<p id="profSub">District · Phone</p>
+</div>
+<div class="hdr-actions">
+<button class="outline-btn" id="editProfBtn"> Edit Profile</button>
+</div>
+</div>
+<!-- Marketplace -->
+<h2 class="inline-style-buyer_dashboard-25"> Available Products</h2>
+<div class="filter-bar">
+<input id="searchBox" placeholder="Search products, farmers…" type="search"/>
+<select id="catFilter">
+<option value="">All Categories</option>
+<option>Cereals and Grains</option>
+<option>Fruits</option>
+<option>Vegetables</option>
+<option>Coffee</option>
+<option>Livestock</option>
+<option>Dairy</option>
+<option>Poultry</option>
+<option>Other</option>
+</select>
+</div>
+<div class="prod-grid" id="prodGrid"></div>
+<!-- My Orders -->
+<div class="panel">
+<h2> My Orders</h2>
+<div class="tw">
+<table>
+<thead>
+<tr>
+<th>Order ID</th>
+<th>Product</th>
+<th>Farmer</th>
+<th>Amount (UGX)</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody id="orderBody"></tbody>
+</table>
+</div>
+<p class="empty-msg inline-style-buyer_dashboard-51" id="ordEmpty">No orders yet.</p>
+</div>
+</main>
+<!-- Edit Profile Overlay -->
+<div class="overlay" id="editOverlay">
+<div class="modal">
+<button class="modal-close" id="closeEdit">×</button>
+<h3> Edit Profile</h3>
+<div class="msg" id="editMsg"></div>
+<div class="inline-style-buyer_dashboard-57">
+<label class="inline-style-buyer_dashboard-58" for="editPicInput" style="position: relative; display: inline-block; cursor: pointer;">
+<div class="inline-style-buyer_dashboard-59" id="eavCircle"></div>
+<small class="inline-style-buyer_dashboard-60">Change Photo</small>
+<input accept="image/*" class="inline-style-buyer_dashboard-61" id="editPicInput" type="file" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; z-index: 10;"/>
+</label>
+</div>
+<div class="field"><label>Full Name</label><input id="eFN" type="text"/></div>
+<div class="field"><label>Phone</label><input id="ePhone" type="tel"/></div>
+<div class="field"><label>District</label><input id="eDist" type="text"/></div>
+<div class="field"><label>Email</label><input id="eEmail" type="email"/></div>
+<div class="field"><label>New Password (leave blank to keep)</label><input id="eNPw" placeholder="New password" type="password"/></div>
+<button class="primary-btn" id="saveProfBtn"> Save Changes</button>
+</div>
+</div>
+<!-- Buy Modal -->
+<div class="overlay" id="orderOverlay">
+<div class="modal" id="orderModal">
+<button class="modal-close" id="closeOrder">×</button>
+<h3 id="orderModalTitle">Place Order</h3>
+<div class="msg" id="orderMsg"></div>
+<p class="inline-style-buyer_dashboard-83" id="orderDesc"></p>
+<label class="inline-style-buyer_dashboard-84">Quantity</label>
+<input id="orderQty" min="1" placeholder="Enter quantity" step="1" type="number"/>
+<p class="inline-style-buyer_dashboard-86">Total: <strong id="orderTotal">UGX 0</strong></p>
+<button class="primary-btn" id="confirmOrderBtn">Confirm Order</button>
+</div>
+</div>
+<div class="toast" id="toast"></div>
+{{ server_user|json_script:"agri-server-user" }}
+  <script src="{% static 'js/auth.js' %}"></script>
+<script>
+    const me = Auth.requireRole('buyer', '/login/');
+    if (!me) throw 0;
+
+    let editPicData = '', currentProduct = null;
+
+    // ── UI refresh ────────────────────────────────────────────────────────────
+    function refreshUI() {
+      const u = Auth.getCurrentUser(); if (!u) return;
+      document.getElementById('hdrName').textContent = u.fullName || 'Buyer';
+      const hAv = document.getElementById('hdrAv');
+      if (u.profilePic) { hAv.innerHTML = `<img src="${u.profilePic}" alt="">`; }
+      else { hAv.textContent = (u.fullName || 'B')[0].toUpperCase(); }
+      document.getElementById('profName').textContent = u.fullName || 'Buyer';
+      document.getElementById('profSub').textContent = (u.district || '') + (u.phone ? ` · ${u.phone}` : '');
+      const pAv = document.getElementById('profAv');
+      if (u.profilePic) { pAv.innerHTML = `<img src="${u.profilePic}" alt="" class="js-inline-style-buyer_dashboard-1">`; }
+      else { pAv.textContent = ''; }
+    }
+
+    // ── Toast ────────────────────────────────────────────────────────────────
+    function toast(m) { const t = document.getElementById('toast'); t.textContent = m; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2600); }
+    function showMsg(el, m, tp = 'error') { el.textContent = m; el.className = 'msg ' + tp + ' show'; }
+    function hideMsg(el) { el.className = 'msg'; }
+
+    document.getElementById('logoutBtn').addEventListener('click', async () => { if (confirm('Log out?')) { await Auth.logout(); location.href = '/login/'; } });
+
+    // ── Render products ───────────────────────────────────────────────────────
+    function renderProds() {
+      const q = document.getElementById('searchBox').value.toLowerCase();
+      const cat = document.getElementById('catFilter').value;
+      let prods = Auth.getApprovedProducts();
+      if (q) prods = prods.filter(p => JSON.stringify(p).toLowerCase().includes(q));
+      if (cat) prods = prods.filter(p => p.category === cat);
+      const grid = document.getElementById('prodGrid');
+      if (!prods.length) { grid.innerHTML = `<div class="empty-msg js-inline-style-buyer_dashboard-2"><div class="emo"></div><p>No products available right now. Check back soon!</p></div>`; return; }
+      grid.innerHTML = prods.map(p => `
+    <div class="prod-card">
+      ${p.image ? `<img src="${p.image}" alt="${p.name}">` : `<div class="no-img"></div>`}
+      <div class="prod-body">
+        <div class="prod-cat">${p.category || ''}</div>
+        <div class="prod-name">${p.name}</div>
+        <div class="prod-meta"> ${p.district || '—'} &nbsp;·&nbsp;  ${p.farmerName || '—'}</div>
+        <div class="prod-meta"> ${p.quantity} ${p.unit} available</div>
+        <div class="prod-price">UGX ${Number(p.price || 0).toLocaleString()} / ${p.unit}</div>
+        <button class="buy-btn" onclick="openOrder('${p.id}')"> Buy Now</button>
+      </div>
+    </div>`).join('');
+    }
+
+    document.getElementById('searchBox').addEventListener('input', renderProds);
+    document.getElementById('catFilter').addEventListener('change', renderProds);
+
+    // ── Orders ────────────────────────────────────────────────────────────────
+    function renderOrders() {
+      const all = Auth.getOrders().filter(o => o.buyerId === me.id);
+      const body = document.getElementById('orderBody');
+      const empty = document.getElementById('ordEmpty');
+      if (!all.length) { body.innerHTML = ''; empty.style.display = 'block'; return; }
+      empty.style.display = 'none';
+      const badges = { Pending: 'b-p', Completed: 'b-a', Cancelled: 'b-r' };
+      body.innerHTML = all.map(o => `<tr>
+    <td><code>${o.id}</code></td><td>${o.productName}</td><td>${o.farmerName || '—'}</td>
+    <td>${Number(o.amount || 0).toLocaleString()}</td>
+    <td><span class="badge ${badges[o.status] || 'b-p'}">${o.status}</span></td>
+  </tr>`).join('');
+    }
+
+    // ── Buy modal ─────────────────────────────────────────────────────────────
+    function openOrder(pid) {
+      currentProduct = Auth.getProducts().find(p => p.id === pid);
+      if (!currentProduct) return;
+      document.getElementById('orderModalTitle').textContent = 'Order: ' + currentProduct.name;
+      document.getElementById('orderDesc').textContent = `Price: UGX ${Number(currentProduct.price).toLocaleString()} per ${currentProduct.unit} · Available: ${currentProduct.quantity} ${currentProduct.unit}`;
+      document.getElementById('orderQty').value = '1';
+      document.getElementById('orderTotal').textContent = 'UGX ' + Number(currentProduct.price).toLocaleString();
+      hideMsg(document.getElementById('orderMsg'));
+      document.getElementById('orderOverlay').classList.add('open');
+    }
+    document.getElementById('closeOrder').addEventListener('click', () => { document.getElementById('orderOverlay').classList.remove('open'); });
+
+    document.getElementById('orderQty').addEventListener('input', function () {
+      if (!currentProduct) return;
+      document.getElementById('orderTotal').textContent = 'UGX ' + (Number(this.value || 0) * Number(currentProduct.price)).toLocaleString();
+    });
+
+    document.getElementById('confirmOrderBtn').addEventListener('click', async () => {
+      const oMsg = document.getElementById('orderMsg');
+      hideMsg(oMsg);
+      const qty = Number(document.getElementById('orderQty').value);
+      if (!qty || qty < 1) { showMsg(oMsg, 'Please enter a valid quantity.'); return; }
+      if (qty > currentProduct.quantity) { showMsg(oMsg, `Only ${currentProduct.quantity} ${currentProduct.unit} available.`); return; }
+      const order = {
+        id: 'ORD-' + Date.now().toString(36).toUpperCase(),
+        buyerId: me.id, buyerName: me.fullName,
+        productId: currentProduct.id, productName: currentProduct.name,
+        farmerId: currentProduct.farmerId, farmerName: currentProduct.farmerName,
+        quantity: qty, unit: currentProduct.unit,
+        amount: qty * currentProduct.price, status: 'Pending',
+        createdAt: new Date().toISOString()
+      };
+      const saved = await Auth.addOrder(order);
+      if (!saved.ok) { showMsg(oMsg, saved.error); return; }
+      await Auth.refresh();
+      document.getElementById('orderOverlay').classList.remove('open');
+      toast('Order placed successfully!');
+      renderProds(); renderOrders();
+    });
+
+    // ── Profile edit ─────────────────────────────────────────────────────────
+    document.getElementById('editProfBtn').addEventListener('click', () => {
+      const u = Auth.getCurrentUser();
+      document.getElementById('eFN').value = u.fullName || '';
+      document.getElementById('ePhone').value = u.phone || '';
+      document.getElementById('eDist').value = u.district || '';
+      document.getElementById('eEmail').value = u.email || '';
+      document.getElementById('eNPw').value = '';
+      editPicData = u.profilePic || '';
+      const c = document.getElementById('eavCircle');
+      if (editPicData) { c.innerHTML = `<img src="${editPicData}" alt="" class="js-inline-style-buyer_dashboard-3">`; }
+      else { c.textContent = ''; }
+      hideMsg(document.getElementById('editMsg'));
+      document.getElementById('editOverlay').classList.add('open');
+    });
+    document.getElementById('closeEdit').addEventListener('click', () => document.getElementById('editOverlay').classList.remove('open'));
+
+    document.getElementById('editPicInput').addEventListener('change', async function () {
+      const f = this.files[0]; if (!f) return;
+      const isImg = f.type ? f.type.startsWith('image/') : /\.(jpe?g|png|webp|heic|bmp|gif)$/i.test(f.name);
+      if (!isImg) { alert('Please select an image file.'); return; }
+      if (f.size > 25 * 1024 * 1024) { alert('Image must be under 25 MB.'); return; }
+      const rd = new FileReader();
+      rd.onerror = () => alert('Could not read image file.');
+      rd.onload = () => {
+        const img = new Image();
+        img.onerror = () => alert('Could not open image format. Please choose a JPG or PNG.');
+        img.onload = () => {
+          const MAX = 400, sc = Math.min(1, MAX / Math.max(img.width, img.height));
+          const c2 = document.createElement('canvas'); c2.width = Math.max(1, Math.round(img.width * sc)); c2.height = Math.max(1, Math.round(img.height * sc));
+          const ctx2 = c2.getContext('2d');
+          if (!ctx2) return;
+          ctx2.drawImage(img, 0, 0, c2.width, c2.height);
+          editPicData = c2.toDataURL('image/jpeg', .82);
+          const circ = document.getElementById('eavCircle');
+          circ.innerHTML = `<img src="${editPicData}" alt="" class="js-inline-style-buyer_dashboard-4">`;
+        }; img.src = rd.result;
+      }; rd.readAsDataURL(f);
+    });
+
+    document.getElementById('saveProfBtn').addEventListener('click', async () => {
+      const em = document.getElementById('editMsg'); hideMsg(em);
+      const fn = document.getElementById('eFN').value.trim();
+      if (!fn) { showMsg(em, 'Full name is required.'); return; }
+      const ch = { fullName: fn, phone: document.getElementById('ePhone').value.trim(), district: document.getElementById('eDist').value.trim(), email: document.getElementById('eEmail').value.trim(), profilePic: editPicData };
+      const np = document.getElementById('eNPw').value;
+      if (np) {
+        if (np.length < 6) { showMsg(em, 'Password must be at least 6 characters.'); return; }
+        ch.password = np;
+      }
+      const saved = await Auth.updateUser(me.id, ch);
+      if (!saved.ok) { showMsg(em, saved.error); return; }
+      document.getElementById('editOverlay').classList.remove('open');
+      refreshUI(); toast('Profile updated!');
+    });
+
+    window.addEventListener('storage', () => { renderProds(); renderOrders(); });
+    refreshUI();
+    Auth.ready.then(() => { renderProds(); renderOrders(); });
+  </script>
+</body>
+</html>
